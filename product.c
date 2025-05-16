@@ -144,6 +144,7 @@ void statistics(){
         total   += products[i].sold;
         revenue += products[i].sold * products[i].price;
     }
+
     printf("总销售量：%d 件\n", total);
     fflush(stdout);
     printf("总收入：%.2f 元\n", revenue);
