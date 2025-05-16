@@ -53,6 +53,7 @@ void add_product(){
            get_current_time_str(times, sizeof(times)));
     fflush(stdout);
     count++;
+
     save_products();
     printf("商品添加成功！\n");
     printf("当前内存商品总数：%d\n", count);
@@ -86,6 +87,8 @@ void list_product(){
 }
 
 void sell_product(){
+    load_products();
+
     int id, qty;
     printf("输入商品ID：");
     fflush(stdout);
@@ -105,12 +108,15 @@ void sell_product(){
     }
     products[id-1].stock -= qty;
     products[id-1].sold  += qty;
-    save_products();  // 保存到文件
+
+    save_products();
     printf("销售成功。\n");
     fflush(stdout);
 }
 
 void restock_product(){
+    load_products();
+
     int id, qty;
     printf("输入商品ID：");
     fflush(stdout);
@@ -125,7 +131,7 @@ void restock_product(){
     scanf("%d", &qty);
     products[id-1].stock += qty;
 
-    save_products();  // 保存到文件
+    save_products();
     printf("补货成功。\n");
     fflush(stdout);
 }
@@ -133,6 +139,7 @@ void statistics(){
     int total = 0;
     double revenue = 0;
     load_products();
+
     for (int i = 0; i < count; i++) {
         total   += products[i].sold;
         revenue += products[i].sold * products[i].price;
@@ -159,7 +166,6 @@ void delete_product(){
         products[i].id = i + 1; // 重新编号
     }
     count--;
-
     save_products();  // 保存到文件
     printf("商品删除成功。\n");
     fflush(stdout);
