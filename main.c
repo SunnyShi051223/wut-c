@@ -20,10 +20,10 @@ int main() {
         switch ((MenuChoice)choice) {
             case MENU_ADD_PRODUCT:    add_product();    break;
             case MENU_LIST_PRODUCT:  list_product();  break;
-//            case MENU_SALE_PRODUCT:   sell_product();   break;
-//            case MENU_RESTOCK_PRODUCT:restock_product();break;
-//            case MENU_STATISTICS:     statistics();     break;
-//            case MENU_DELETE_PRODUCT: delete_product(); break;
+            case MENU_SALE_PRODUCT:   sell_product();   break;
+            case MENU_RESTOCK_PRODUCT:restock_product();break;
+            case MENU_STATISTICS:     statistics();     break;
+            case MENU_DELETE_PRODUCT: delete_product(); break;
             case MENU_EXIT:           printf("感谢使用！\n"); break;
             default: printf("无效选择，请重试。\n");
         }

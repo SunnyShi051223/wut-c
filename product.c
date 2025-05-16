@@ -22,9 +22,21 @@ void add_product(){
         fflush(stdout);
         return;
     }
+
+    char name[50];
     printf("请输入产品名称：");
     fflush(stdout);
-    scanf("%s", products[count].name);
+    scanf("%49s", name);
+
+
+    for (int i = 0; i < count; i++) {
+        if (strcmp(products[i].name, name) == 0) {
+            printf("商品名称 \"%s\" 已存在，禁止重复添加！\n", name);
+            return;
+        }
+    }
+
+    strcpy(products[count].name, name);
     printf("请输入产品价格：");
     fflush(stdout);
     scanf("%lf", &products[count].price);
@@ -74,18 +86,83 @@ void list_product(){
 }
 
 void sell_product(){
-
+    int id, qty;
+    printf("输入商品ID：");
+    fflush(stdout);
+    scanf("%d", &id);
+    if (id < 1 || id > count) {
+        printf("无效商品ID。\n");
+        fflush(stdout);
+        return;
+    }
+    printf("输入销售数量：");
+    fflush(stdout);
+    scanf("%d", &qty);
+    if (qty > products[id-1].stock) {
+        printf("库存不足！\n");
+        fflush(stdout);
+        return;
+    }
+    products[id-1].stock -= qty;
+    products[id-1].sold  += qty;
+    save_products();  // 保存到文件
+    printf("销售成功。\n");
+    fflush(stdout);
 }
 
 void restock_product(){
+    int id, qty;
+    printf("输入商品ID：");
+    fflush(stdout);
+    scanf("%d", &id);
+    if (id < 1 || id > count) {
+        printf("无效商品ID。\n");
+        fflush(stdout);
+        return;
+    }
+    printf("输入补货数量：");
+    fflush(stdout);
+    scanf("%d", &qty);
+    products[id-1].stock += qty;
 
+    save_products();  // 保存到文件
+    printf("补货成功。\n");
+    fflush(stdout);
 }
 void statistics(){
-
+    int total = 0;
+    double revenue = 0;
+    load_products();
+    for (int i = 0; i < count; i++) {
+        total   += products[i].sold;
+        revenue += products[i].sold * products[i].price;
+    }
+    printf("总销售量：%d 件\n", total);
+    fflush(stdout);
+    printf("总收入：%.2f 元\n", revenue);
+    fflush(stdout);
 }
 
 void delete_product(){
+    load_products();
+    int id;
+    printf("输入要删除的商品ID：");
+    fflush(stdout);
+    scanf("%d", &id);
+    if (id < 1 || id > count) {
+        printf("无效ID。\n");
+        fflush(stdout);
+        return;
+    }
+    for (int i = id - 1; i < count - 1; i++) {
+        products[i] = products[i + 1];
+        products[i].id = i + 1; // 重新编号
+    }
+    count--;
 
+    save_products();  // 保存到文件
+    printf("商品删除成功。\n");
+    fflush(stdout);
 }
 
 void load_products() {
@@ -94,7 +171,6 @@ void load_products() {
         return;
     }
     count=0;
-    printf("正在加载数据！");
 
     while (fscanf(fp, "%d %s %lf %d %d %ld",
                   &products[count].id,
@@ -112,7 +188,6 @@ void load_products() {
 
 void save_products() {
     FILE *fp = fopen(DATA_FILE, "w");
-    printf("%d",fp==NULL);
     if (!fp) {
         perror("无法打开文件进行保存");
         return;
@@ -127,6 +202,5 @@ void save_products() {
                 products[i].sold,
                 products[i].added);
     }
-    printf("正在保存商品到 %s，共 %d 条\n", DATA_FILE, count);
     fclose(fp);
 }
