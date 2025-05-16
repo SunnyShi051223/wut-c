@@ -15,4 +15,7 @@ void statistics();//统计
 void delete_product();//删除商品
 
 
+void load_products();
+void save_products();
+
 #endif //SYSTEM_VAGETABLE_SALE_PRODUCT_H
