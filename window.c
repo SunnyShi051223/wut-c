@@ -18,24 +18,24 @@ void refresh_product_list(GtkWidget *list) {
     GtkListStore *store = GTK_LIST_STORE(gtk_tree_view_get_model(GTK_TREE_VIEW(list)));
     gtk_list_store_clear(store);
 
-
     for (int i = 0; i < count; i++) {
         char time_str[20];
+        char price_str[20]; // 新增：用于格式化价格
         format_time(products[i].added, time_str, sizeof(time_str));
+        snprintf(price_str, sizeof(price_str), "%.2f", products[i].price); // 格式化两位小数
 
         GtkTreeIter iter;
         gtk_list_store_append(store, &iter);
         gtk_list_store_set(store, &iter,
                            0, products[i].id,
                            1, products[i].name,
-                           2, products[i].price,
+                           2, price_str, // 使用格式化后的字符串
                            3, products[i].stock,
                            4, products[i].sold,
                            5, time_str,
                            -1);
     }
 }
-
 // 添加商品对话框
 void on_add_product(GtkButton *button, gpointer data) {
     GtkWidget *dialog = gtk_dialog_new_with_buttons("添加商品", GTK_WINDOW(data),
@@ -248,7 +248,7 @@ void activate_app(GtkApplication *app, gpointer user_data) {
 
     // 商品列表
     product_list = gtk_tree_view_new();
-    GtkListStore *store = gtk_list_store_new(6, G_TYPE_INT, G_TYPE_STRING, G_TYPE_DOUBLE, G_TYPE_INT, G_TYPE_INT, G_TYPE_STRING);
+    GtkListStore *store = gtk_list_store_new(6, G_TYPE_INT, G_TYPE_STRING, G_TYPE_STRING, G_TYPE_INT, G_TYPE_INT, G_TYPE_STRING);
     gtk_tree_view_set_model(GTK_TREE_VIEW(product_list), GTK_TREE_MODEL(store));
 
     // 添加列
@@ -262,7 +262,7 @@ void activate_app(GtkApplication *app, gpointer user_data) {
     gtk_tree_view_insert_column_with_attributes(GTK_TREE_VIEW(product_list), -1, "添加时间", renderer, "text", 5, NULL);
 
     // 状态栏
-    status_label = gtk_label_new("就绪");
+    status_label = gtk_label_new("开始营业吧！");
 
     // 组装界面
     gtk_box_pack_start(GTK_BOX(vbox), toolbar, FALSE, FALSE, 0);
