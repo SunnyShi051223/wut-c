@@ -6,8 +6,9 @@
 #define SYSTEM_VAGETABLE_SALE_PRODUCT_H
 
 #include "model.h"
-static Product products[MAX_PRODUCTS];
-static int count = 0;
+
+extern Product products[MAX_PRODUCTS];
+extern int count;
 
 void add_product(); // 添加商品
 void list_product(); // 商品列表

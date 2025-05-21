@@ -18,7 +18,6 @@ void refresh_product_list(GtkWidget *list) {
     GtkListStore *store = GTK_LIST_STORE(gtk_tree_view_get_model(GTK_TREE_VIEW(list)));
     gtk_list_store_clear(store);
 
-    load_products(); // 加载最新数据
 
     for (int i = 0; i < count; i++) {
         char time_str[20];
@@ -72,11 +71,144 @@ void on_add_product(GtkButton *button, gpointer data) {
         products[count].sold = 0;
         products[count].added = time(NULL);
         count++;
+
         save_products();
 
         gtk_label_set_text(GTK_LABEL(status_label), "商品添加成功！");
         refresh_product_list(product_list);
     }
+    gtk_widget_destroy(dialog);
+}
+
+// 删除商品对话框
+void on_delete_product(GtkButton *button, gpointer data) {
+    GtkWidget *dialog = gtk_dialog_new_with_buttons("删除商品", GTK_WINDOW(data),
+                                                    GTK_DIALOG_MODAL,
+                                                    "确定", GTK_RESPONSE_ACCEPT,
+                                                    "取消", GTK_RESPONSE_REJECT,
+                                                    NULL);
+    GtkWidget *content = gtk_dialog_get_content_area(GTK_DIALOG(dialog));
+    GtkWidget *id_entry = gtk_entry_new();
+    gtk_container_add(GTK_CONTAINER(content), gtk_label_new("输入要删除的商品ID:"));
+    gtk_container_add(GTK_CONTAINER(content), id_entry);
+    gtk_widget_show_all(dialog);
+
+    if (gtk_dialog_run(GTK_DIALOG(dialog)) == GTK_RESPONSE_ACCEPT) {
+        const char *id_str = gtk_entry_get_text(GTK_ENTRY(id_entry));
+        int id = atoi(id_str);
+
+        // 输入验证
+        if (id < 1 || id > count) {
+            gtk_label_set_text(GTK_LABEL(status_label), "无效的商品ID！");
+        } else {
+            // 调用删除逻辑
+            for (int i = id - 1; i < count - 1; i++) {
+                products[i] = products[i + 1];
+                products[i].id = i + 1;
+            }
+            count--;
+            save_products();
+            refresh_product_list(product_list);
+            gtk_label_set_text(GTK_LABEL(status_label), "商品删除成功！");
+        }
+    }
+    gtk_widget_destroy(dialog);
+}
+
+// 销售商品对话框
+void on_sell_product(GtkButton *button, gpointer data) {
+    GtkWidget *dialog = gtk_dialog_new_with_buttons("销售商品", GTK_WINDOW(data),
+                                                    GTK_DIALOG_MODAL,
+                                                    "确定", GTK_RESPONSE_ACCEPT,
+                                                    "取消", GTK_RESPONSE_REJECT,
+                                                    NULL);
+    GtkWidget *content = gtk_dialog_get_content_area(GTK_DIALOG(dialog));
+    GtkWidget *id_entry = gtk_entry_new();
+    GtkWidget *qty_entry = gtk_entry_new();
+
+    gtk_container_add(GTK_CONTAINER(content), gtk_label_new("商品ID:"));
+    gtk_container_add(GTK_CONTAINER(content), id_entry);
+    gtk_container_add(GTK_CONTAINER(content), gtk_label_new("销售数量:"));
+    gtk_container_add(GTK_CONTAINER(content), qty_entry);
+    gtk_widget_show_all(dialog);
+
+    if (gtk_dialog_run(GTK_DIALOG(dialog)) == GTK_RESPONSE_ACCEPT) {
+        int id = atoi(gtk_entry_get_text(GTK_ENTRY(id_entry)));
+        int qty = atoi(gtk_entry_get_text(GTK_ENTRY(qty_entry)));
+
+        if (id < 1 || id > count) {
+            gtk_label_set_text(GTK_LABEL(status_label), "无效的商品ID！");
+        } else if (qty <= 0) {
+            gtk_label_set_text(GTK_LABEL(status_label), "数量必须大于0！");
+        } else if (products[id-1].stock < qty) {
+            gtk_label_set_text(GTK_LABEL(status_label), "库存不足！");
+        } else {
+            products[id-1].stock -= qty;
+            products[id-1].sold += qty;
+            save_products();
+            refresh_product_list(product_list);
+            gtk_label_set_text(GTK_LABEL(status_label), "销售成功！");
+        }
+    }
+    gtk_widget_destroy(dialog);
+}
+
+// 补货商品对话框
+void on_restock_product(GtkButton *button, gpointer data) {
+    GtkWidget *dialog = gtk_dialog_new_with_buttons("补货商品", GTK_WINDOW(data),
+                                                    GTK_DIALOG_MODAL,
+                                                    "确定", GTK_RESPONSE_ACCEPT,
+                                                    "取消", GTK_RESPONSE_REJECT,
+                                                    NULL);
+    GtkWidget *content = gtk_dialog_get_content_area(GTK_DIALOG(dialog));
+    GtkWidget *id_entry = gtk_entry_new();
+    GtkWidget *qty_entry = gtk_entry_new();
+
+    gtk_container_add(GTK_CONTAINER(content), gtk_label_new("商品ID:"));
+    gtk_container_add(GTK_CONTAINER(content), id_entry);
+    gtk_container_add(GTK_CONTAINER(content), gtk_label_new("补货数量:"));
+    gtk_container_add(GTK_CONTAINER(content), qty_entry);
+    gtk_widget_show_all(dialog);
+
+    if (gtk_dialog_run(GTK_DIALOG(dialog)) == GTK_RESPONSE_ACCEPT) {
+        int id = atoi(gtk_entry_get_text(GTK_ENTRY(id_entry)));
+        int qty = atoi(gtk_entry_get_text(GTK_ENTRY(qty_entry)));
+
+        if (id < 1 || id > count) {
+            gtk_label_set_text(GTK_LABEL(status_label), "无效的商品ID！");
+        } else if (qty <= 0) {
+            gtk_label_set_text(GTK_LABEL(status_label), "数量必须大于0！");
+        } else {
+            products[id-1].stock += qty;
+            save_products();
+            refresh_product_list(product_list);
+            gtk_label_set_text(GTK_LABEL(status_label), "补货成功！");
+        }
+    }
+    gtk_widget_destroy(dialog);
+}
+
+// 统计对话框
+void on_statistics(GtkButton *button, gpointer data) {
+    int total_sold = 0;
+    double total_revenue = 0.0;
+
+    for (int i = 0; i < count; i++) {
+        total_sold += products[i].sold;
+        total_revenue += products[i].sold * products[i].price;
+    }
+
+    char message[100];
+    snprintf(message, sizeof(message),
+             "总销售量: %d 件\n总收入: %.2f 元",
+             total_sold, total_revenue);
+
+    GtkWidget *dialog = gtk_message_dialog_new(GTK_WINDOW(data),
+                                               GTK_DIALOG_MODAL,
+                                               GTK_MESSAGE_INFO,
+                                               GTK_BUTTONS_OK,
+                                               "%s", message);
+    gtk_dialog_run(GTK_DIALOG(dialog));
     gtk_widget_destroy(dialog);
 }
 
@@ -98,9 +230,16 @@ void activate_app(GtkApplication *app, gpointer user_data) {
     gtk_box_pack_start(GTK_BOX(toolbar), add_btn, FALSE, FALSE, 0);
 
     GtkWidget *del_btn = gtk_button_new_with_label("删除商品");
+    g_signal_connect(del_btn, "clicked", G_CALLBACK(on_delete_product), window);
+
     GtkWidget *sell_btn = gtk_button_new_with_label("销售商品");
+    g_signal_connect(sell_btn, "clicked", G_CALLBACK(on_sell_product), window);
+
     GtkWidget *restock_btn = gtk_button_new_with_label("补货商品");
+    g_signal_connect(restock_btn, "clicked", G_CALLBACK(on_restock_product), window);
+
     GtkWidget *stat_btn = gtk_button_new_with_label("统计");
+    g_signal_connect(stat_btn, "clicked", G_CALLBACK(on_statistics), window);
 
     gtk_box_pack_start(GTK_BOX(toolbar), del_btn, FALSE, FALSE, 0);
     gtk_box_pack_start(GTK_BOX(toolbar), sell_btn, FALSE, FALSE, 0);
@@ -138,3 +277,6 @@ void activate_app(GtkApplication *app, gpointer user_data) {
 
     gtk_widget_show_all(window);
 }
+
+
+

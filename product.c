@@ -10,11 +10,12 @@
 
 #define DATA_FILE "data.txt"
 
+Product  products[MAX_PRODUCTS];
+int count = 0;
 
 
 
 void add_product(){
-    load_products();
     if (count >= MAX_PRODUCTS) {
         printf("产品数量已达到上限，无法添加新产品。\n");
         fflush(stdout);
@@ -59,7 +60,6 @@ void add_product(){
 }
 
 void list_product(){
-    load_products();
 
     if (count == 0) {
         printf("当前没有商品。\n");
@@ -84,7 +84,6 @@ void list_product(){
 }
 
 void sell_product(){
-    load_products();
 
     int id, qty;
     printf("输入商品ID：");
@@ -112,7 +111,6 @@ void sell_product(){
 }
 
 void restock_product(){
-    load_products();
 
     int id, qty;
     printf("输入商品ID：");
@@ -149,7 +147,7 @@ void statistics(){
 }
 
 void delete_product(){
-    load_products();
+
     int id;
     printf("输入要删除的商品ID：");
     fflush(stdout);
@@ -174,7 +172,6 @@ void load_products() {
     if (!fp) {
         return;
     }
-    count=0;
 
     while (fscanf(fp, "%d %s %lf %d %d %ld",
                   &products[count].id,

@@ -6,6 +6,7 @@
 #include "window.h"
 
 int main(int argc, char *argv[]) {
+    load_products();
     GtkApplication *app = gtk_application_new("org.example.vegesale", G_APPLICATION_FLAGS_NONE);
     g_signal_connect(app, "activate", G_CALLBACK(activate_app), NULL);
     int status = g_application_run(G_APPLICATION(app), argc, argv);
