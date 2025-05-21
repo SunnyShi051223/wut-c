@@ -20,16 +20,16 @@ void refresh_product_list(GtkWidget *list) {
 
     for (int i = 0; i < count; i++) {
         char time_str[20];
-        char price_str[20]; // 新增：用于格式化价格
+        char price_str[20];
         format_time(products[i].added, time_str, sizeof(time_str));
-        snprintf(price_str, sizeof(price_str), "%.2f", products[i].price); // 格式化两位小数
+        snprintf(price_str, sizeof(price_str), "%.2f", products[i].price);
 
         GtkTreeIter iter;
         gtk_list_store_append(store, &iter);
         gtk_list_store_set(store, &iter,
                            0, products[i].id,
                            1, products[i].name,
-                           2, price_str, // 使用格式化后的字符串
+                           2, price_str,
                            3, products[i].stock,
                            4, products[i].sold,
                            5, time_str,
