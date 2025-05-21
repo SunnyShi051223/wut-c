@@ -10,3 +10,11 @@ add_executable(System_vagetable_sale main.c
         model.h
         window.c
 )
+
+FIND_PACKAGE(PkgConfig REQUIRED)
+
+PKG_CHECK_MODULES(GTK3 REQUIRED gtk+-3.0)
+
+INCLUDE_DIRECTORIES(${GTK3_INCLUDE_DIRS})
+LINK_DIRECTORIES(${GTK3_LIBRARY_DIRS})
+TARGET_LINK_LIBRARIES(System_vagetable_sale ${GTK3_LIBRARIES})

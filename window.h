@@ -6,9 +6,6 @@
 #define SYSTEM_VAGETABLE_SALE_WINDOW_H
 
 
-#ifndef WINDOW_H
-#define WINDOW_H
-
 #include <gtk/gtk.h>
 
 void activate_app(GtkApplication *app, gpointer user_data);

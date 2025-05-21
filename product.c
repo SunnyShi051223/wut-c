@@ -11,8 +11,6 @@
 #define DATA_FILE "data.txt"
 
 
-static Product products[MAX_PRODUCTS];
-static int count = 0;
 
 
 void add_product(){

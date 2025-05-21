@@ -6,6 +6,8 @@
 #include "product.h"
 #include "tool.h"
 #include <gtk/gtk.h>
+#include <string.h>
+
 
 // 声明全局控件
 GtkWidget *product_list;
@@ -95,6 +97,16 @@ void activate_app(GtkApplication *app, gpointer user_data) {
     g_signal_connect(add_btn, "clicked", G_CALLBACK(on_add_product), window);
     gtk_box_pack_start(GTK_BOX(toolbar), add_btn, FALSE, FALSE, 0);
 
+    GtkWidget *del_btn = gtk_button_new_with_label("删除商品");
+    GtkWidget *sell_btn = gtk_button_new_with_label("销售商品");
+    GtkWidget *restock_btn = gtk_button_new_with_label("补货商品");
+    GtkWidget *stat_btn = gtk_button_new_with_label("统计");
+
+    gtk_box_pack_start(GTK_BOX(toolbar), del_btn, FALSE, FALSE, 0);
+    gtk_box_pack_start(GTK_BOX(toolbar), sell_btn, FALSE, FALSE, 0);
+    gtk_box_pack_start(GTK_BOX(toolbar), restock_btn, FALSE, FALSE, 0);
+    gtk_box_pack_start(GTK_BOX(toolbar), stat_btn, FALSE, FALSE, 0);
+
     // 商品列表
     product_list = gtk_tree_view_new();
     GtkListStore *store = gtk_list_store_new(6, G_TYPE_INT, G_TYPE_STRING, G_TYPE_DOUBLE, G_TYPE_INT, G_TYPE_INT, G_TYPE_STRING);
@@ -104,7 +116,11 @@ void activate_app(GtkApplication *app, gpointer user_data) {
     GtkCellRenderer *renderer;
     renderer = gtk_cell_renderer_text_new();
     gtk_tree_view_insert_column_with_attributes(GTK_TREE_VIEW(product_list), -1, "ID", renderer, "text", 0, NULL);
-    // 类似添加其他列...
+    gtk_tree_view_insert_column_with_attributes(GTK_TREE_VIEW(product_list), -1, "名称", renderer, "text", 1, NULL);
+    gtk_tree_view_insert_column_with_attributes(GTK_TREE_VIEW(product_list), -1, "价格", renderer, "text", 2, NULL);
+    gtk_tree_view_insert_column_with_attributes(GTK_TREE_VIEW(product_list), -1, "库存", renderer, "text", 3, NULL);
+    gtk_tree_view_insert_column_with_attributes(GTK_TREE_VIEW(product_list), -1, "已售", renderer, "text", 4, NULL);
+    gtk_tree_view_insert_column_with_attributes(GTK_TREE_VIEW(product_list), -1, "添加时间", renderer, "text", 5, NULL);
 
     // 状态栏
     status_label = gtk_label_new("就绪");
@@ -116,6 +132,9 @@ void activate_app(GtkApplication *app, gpointer user_data) {
 
     // 初始加载数据
     refresh_product_list(product_list);
+
+    GtkTreeSelection *selection = gtk_tree_view_get_selection(GTK_TREE_VIEW(product_list));
+    gtk_tree_selection_set_mode(selection, GTK_SELECTION_SINGLE);
 
     gtk_widget_show_all(window);
 }
