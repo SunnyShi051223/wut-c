@@ -81,7 +81,6 @@ void list_product(){
                products[i].stock,
                products[i].sold,
                times);
-
     }
     fflush(stdout);
 }

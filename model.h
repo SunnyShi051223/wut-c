@@ -32,7 +32,7 @@ typedef enum{
     MENU_SALE_PRODUCT=3,
     // 补货商品菜单
     MENU_RESTOCK_PRODUCT=4,
-    // 统计商品菜单
+    // 统计销售菜单
     MENU_STATISTICS=5,
     // 删除商品菜单
     MENU_DELETE_PRODUCT=6,
