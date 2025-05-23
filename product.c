@@ -5,65 +5,89 @@
 #include <stdio.h>
 #include <string.h>
 #include <time.h>
+#include <malloc.h>
 #include "product.h"
 #include "tool.h"
 
 #define DATA_FILE "data.txt"
 
 
-static Product products[MAX_PRODUCTS];
-static int count = 0;
+static ProductNode *head=NULL;
 
-
-void add_product(){
-    load_products();
-    if (count >= MAX_PRODUCTS) {
-        printf("产品数量已达到上限，无法添加新产品。\n");
-        fflush(stdout);
-        return;
+ProductNode *create_product_node(int id, const char *name, double price, int stock, int sold, time_t added) {
+    ProductNode *new_node = (ProductNode *)malloc(sizeof(ProductNode));
+    if (!new_node) {
+        perror("内存分配失败");
+        exit(1);
     }
+    new_node->id = id;
+    strncpy(new_node->name, name, NAME_LEN - 1);
+    new_node->price = price;
+    new_node->stock = stock;
+    new_node->sold = sold;
+    new_node->added = added;
+    new_node->next = NULL;
+    return new_node;
+}
 
+int get_next_id() {
+    int max_id = 0;
+    ProductNode *current = head;
+    while (current) {
+        if (current->id > max_id) {
+            max_id = current->id;
+        }
+        current = current->next;
+    }
+    return max_id + 1;
+}
+
+void add_product() {
     char name[50];
     printf("请输入产品名称：");
     fflush(stdout);
     scanf("%49s", name);
 
+    load_products();
 
-    for (int i = 0; i < count; i++) {
-        if (strcmp(products[i].name, name) == 0) {
+    // 检查商品名称是否已存在
+    ProductNode *current = head;
+    while (current) {
+        if (strcmp(current->name, name) == 0) {
             printf("商品名称 \"%s\" 已存在，禁止重复添加！\n", name);
             return;
         }
+        current = current->next;
     }
 
-    strcpy(products[count].name, name);
+    double price;
+    int stock;
     printf("请输入产品价格：");
     fflush(stdout);
-    scanf("%lf", &products[count].price);
+    scanf("%lf", &price);
     printf("请输入产品库存数量：");
     fflush(stdout);
-    scanf("%d", &products[count].stock);
+    scanf("%d", &stock);
 
-    products[count].id = count + 1;
-    products[count].sold = 0;
-    products[count].added = time(NULL);
-
+    time_t now = time(NULL);
     char times[20];
-    printf("添加时间：%s\n",
-           get_current_time_str(times, sizeof(times)));
-    fflush(stdout);
-    count++;
+    printf("添加时间：%s\n", get_current_time_str(times, sizeof(times)));
+
+    // 创建新节点并添加到链表头部
+    ProductNode *new_node = create_product_node(get_next_id(), name, price, stock, 0, now);
+    new_node->next = head;
+    head = new_node;
 
     save_products();
     printf("商品添加成功！\n");
-    printf("当前内存商品总数：%d\n", count);
-    fflush(stdout);
 }
 
-void list_product(){
-    load_products();
 
-    if (count == 0) {
+
+void list_product() {
+
+    load_products();
+    if (!head) {
         printf("当前没有商品。\n");
         fflush(stdout);
         return;
@@ -72,77 +96,95 @@ void list_product(){
     char times[20];
     printf("ID\t名称\t\t 价格\t  库存\t 已售\t    添加时间\n");
     fflush(stdout);
-    for (int i = 0; i < count; i++) {
-        format_time(products[i].added, times, sizeof(times));
+
+    ProductNode *current = head;
+    while (current) {
+        format_time(current->added, times, sizeof(times));
         printf("%-3d %-8s %-8.2f %-6d %-6d %s\n",
-               products[i].id,
-               products[i].name,
-               products[i].price,
-               products[i].stock,
-               products[i].sold,
+               current->id,
+               current->name,
+               current->price,
+               current->stock,
+               current->sold,
                times);
-
+        current = current->next;
     }
-    fflush(stdout);
 }
 
-void sell_product(){
-    load_products();
-
+void sell_product() {
     int id, qty;
     printf("输入商品ID：");
     fflush(stdout);
     scanf("%d", &id);
-    if (id < 1 || id > count) {
-        printf("无效商品ID。\n");
-        fflush(stdout);
-        return;
-    }
-    printf("输入销售数量：");
-    fflush(stdout);
-    scanf("%d", &qty);
-    if (qty > products[id-1].stock) {
-        printf("库存不足！\n");
-        fflush(stdout);
-        return;
-    }
-    products[id-1].stock -= qty;
-    products[id-1].sold  += qty;
 
-    save_products();
-    printf("销售成功。\n");
+    load_products();
+
+    ProductNode *current = head;
+    ProductNode *prev = NULL;
+
+    // 查找商品节点
+    while (current) {
+        if (current->id == id) {
+            printf("输入销售数量：");
+            fflush(stdout);
+            scanf("%d", &qty);
+            if (qty > current->stock) {
+                printf("库存不足！\n");
+                fflush(stdout);
+                return;
+            }
+            current->stock -= qty;
+            current->sold += qty;
+            save_products();
+            printf("销售成功。\n");
+            fflush(stdout);
+            return;
+        }
+        prev = current;
+        current = current->next;
+    }
+
+    printf("无效商品ID。\n");
     fflush(stdout);
 }
 
-void restock_product(){
-    load_products();
-
+void restock_product() {
     int id, qty;
     printf("输入商品ID：");
     fflush(stdout);
     scanf("%d", &id);
-    if (id < 1 || id > count) {
-        printf("无效商品ID。\n");
-        fflush(stdout);
-        return;
-    }
-    printf("输入补货数量：");
-    fflush(stdout);
-    scanf("%d", &qty);
-    products[id-1].stock += qty;
 
-    save_products();
-    printf("补货成功。\n");
+    load_products();
+
+    ProductNode *current = head;
+    while (current) {
+        if (current->id == id) {
+            printf("输入补货数量：");
+            fflush(stdout);
+            scanf("%d", &qty);
+            current->stock += qty;
+            save_products();
+            printf("补货成功。\n");
+            fflush(stdout);
+            return;
+        }
+        current = current->next;
+    }
+
+    printf("无效商品ID。\n");
     fflush(stdout);
 }
-void statistics(){
+
+void statistics() {
     int total = 0;
     double revenue = 0;
     load_products();
 
-    for (int i = 0; i < count; i++) {
-        total   += products[i].sold;
-        revenue += products[i].sold * products[i].price;
+    ProductNode *current = head;
+    while (current) {
+        total += current->sold;
+        revenue += current->sold * current->price;
+        current = current->next;
     }
 
     printf("总销售量：%d 件\n", total);
@@ -151,24 +193,37 @@ void statistics(){
     fflush(stdout);
 }
 
-void delete_product(){
-    load_products();
+void delete_product() {
+
+    load_products();1
     int id;
     printf("输入要删除的商品ID：");
     fflush(stdout);
     scanf("%d", &id);
-    if (id < 1 || id > count) {
-        printf("无效ID。\n");
-        fflush(stdout);
-        return;
+
+    ProductNode *current = head;
+    ProductNode *prev = NULL;
+
+    // 查找商品节点
+    while (current) {
+        if (current->id == id) {
+            // 删除节点
+            if (prev) {
+                prev->next = current->next;
+            } else {
+                head = current->next;
+            }
+            free(current);
+            save_products();
+            printf("商品删除成功。\n");
+            fflush(stdout);
+            return;
+        }
+        prev = current;
+        current = current->next;
     }
-    for (int i = id - 1; i < count - 1; i++) {
-        products[i] = products[i + 1];
-        products[i].id = i + 1; // 重新编号
-    }
-    count--;
-    save_products();  // 保存到文件
-    printf("商品删除成功。\n");
+
+    printf("无效ID。\n");
     fflush(stdout);
 }
 
@@ -177,17 +232,25 @@ void load_products() {
     if (!fp) {
         return;
     }
-    count=0;
 
-    while (fscanf(fp, "%d %s %lf %d %d %ld",
-                  &products[count].id,
-                  products[count].name,
-                  &products[count].price,
-                  &products[count].stock,
-                  &products[count].sold,
-                  &products[count].added) == 6) {
-        count++;
-        if (count >= MAX_PRODUCTS) break;
+    // 清空链表
+    while (head) {
+        ProductNode *temp = head;
+        head = head->next;
+        free(temp);
+    }
+
+    int id;
+    char name[NAME_LEN];
+    double price;
+    int stock;
+    int sold;
+    long added;
+
+    while (fscanf(fp, "%d %s %lf %d %d %ld", &id, name, &price, &stock, &sold, &added) == 6) {
+        ProductNode *new_node = create_product_node(id, name, price, stock, sold, (time_t)added);
+        new_node->next = head;
+        head = new_node;
     }
 
     fclose(fp);
@@ -200,14 +263,16 @@ void save_products() {
         return;
     }
 
-    for (int i = 0; i < count; i++) {
+    ProductNode *current = head;
+    while (current) {
         fprintf(fp, "%d %s %lf %d %d %ld\n",
-                products[i].id,
-                products[i].name,
-                products[i].price,
-                products[i].stock,
-                products[i].sold,
-                products[i].added);
+                current->id,
+                current->name,
+                current->price,
+                current->stock,
+                current->sold,
+                current->added);
+        current = current->next;
     }
     fclose(fp);
 }

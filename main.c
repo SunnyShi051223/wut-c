@@ -2,6 +2,10 @@
 #include "product.h"
 #include "model.h"
 
+#include <stdio.h>
+#include "product.h"
+#include "model.h"
+
 int main() {
     int choice;
     do {

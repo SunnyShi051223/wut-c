@@ -10,12 +10,11 @@
 void add_product(); // 添加商品
 void list_product(); // 商品列表
 void sell_product(); // 销售商品
-void restock_product();//补货商品
-void statistics();//统计
-void delete_product();//删除商品
-
+void restock_product(); // 补货商品
+void statistics(); // 统计
+void delete_product(); // 删除商品
 
 void load_products();
 void save_products();
 
-#endif //SYSTEM_VAGETABLE_SALE_PRODUCT_H
+#endif // SYSTEM_VAGETABLE_SALE_PRODUCT_H
