@@ -15,7 +15,7 @@ typedef struct {
     int id; //商品编号
     char name[NAME_LEN];//商品名称
    // double input_price;//商品进价
-    double out_price;//商品价格
+    double price;//商品价格
     int stock;//商品库存
     int sold;//商品已售数量
     time_t added;//商品添加时间
