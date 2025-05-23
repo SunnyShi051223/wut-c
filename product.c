@@ -195,7 +195,7 @@ void statistics() {
 
 void delete_product() {
 
-    load_products();1
+    load_products();
     int id;
     printf("输入要删除的商品ID：");
     fflush(stdout);
