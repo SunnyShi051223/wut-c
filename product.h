@@ -7,12 +7,16 @@
 
 #include "model.h"
 
-void add_product(); // 添加商品
-void list_product(); // 商品列表
-void sell_product(); // 销售商品
-void restock_product(); // 补货商品
+void add_product(); // 添加
+void list_product(); // 列表
+void sell_product(); // 销售
+void restock_product(); // 补货
 void statistics(); // 统计
-void delete_product(); // 删除商品
+void delete_product(); // 删除
+
+int get_next_id();
+ProductNode *create_product_node(int id, const char *name, double price, int stock, int sold, time_t added);
+
 
 void load_products();
 void save_products();
