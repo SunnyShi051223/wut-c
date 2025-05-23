@@ -22,6 +22,7 @@ ProductNode *create_product_node(int id, const char *name, double price, int sto
     }
     new_node->id = id;
     strncpy(new_node->name, name, NAME_LEN - 1);
+    new_node->name[NAME_LEN - 1] = '\0'; // 确保字符串终止
     new_node->price = price;
     new_node->stock = stock;
     new_node->sold = sold;
@@ -41,6 +42,7 @@ int get_next_id() {
     }
     return max_id + 1;
 }
+
 
 void add_product() {
     char name[50];
@@ -84,6 +86,7 @@ void add_product() {
 
 
 
+
 void list_product() {
 
     load_products();
@@ -120,8 +123,6 @@ void sell_product() {
     load_products();
 
     ProductNode *current = head;
-    ProductNode *prev = NULL;
-
     // 查找商品节点
     while (current) {
         if (current->id == id) {
@@ -140,7 +141,6 @@ void sell_product() {
             fflush(stdout);
             return;
         }
-        prev = current;
         current = current->next;
     }
 
@@ -194,20 +194,18 @@ void statistics() {
 }
 
 void delete_product() {
-
     load_products();
     int id;
     printf("输入要删除的商品ID：");
     fflush(stdout);
     scanf("%d", &id);
+    while (getchar() != '\n');
 
     ProductNode *current = head;
     ProductNode *prev = NULL;
 
-    // 查找商品节点
     while (current) {
         if (current->id == id) {
-            // 删除节点
             if (prev) {
                 prev->next = current->next;
             } else {
@@ -216,7 +214,6 @@ void delete_product() {
             free(current);
             save_products();
             printf("商品删除成功。\n");
-            fflush(stdout);
             return;
         }
         prev = current;
@@ -224,16 +221,12 @@ void delete_product() {
     }
 
     printf("无效ID。\n");
-    fflush(stdout);
 }
 
 void load_products() {
     FILE *fp = fopen(DATA_FILE, "r");
-    if (!fp) {
-        return;
-    }
+    if (!fp) return;
 
-    // 清空链表
     while (head) {
         ProductNode *temp = head;
         head = head->next;
@@ -243,11 +236,10 @@ void load_products() {
     int id;
     char name[NAME_LEN];
     double price;
-    int stock;
-    int sold;
+    int stock, sold;
     long added;
 
-    while (fscanf(fp, "%d %s %lf %d %d %ld", &id, name, &price, &stock, &sold, &added) == 6) {
+    while (fscanf(fp, "%d %99s %lf %d %d %ld", &id, name, &price, &stock, &sold, &added) == 6) {
         ProductNode *new_node = create_product_node(id, name, price, stock, sold, (time_t)added);
         new_node->next = head;
         head = new_node;
