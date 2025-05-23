@@ -22,7 +22,7 @@ ProductNode *create_product_node(int id, const char *name, double price, int sto
     }
     new_node->id = id;
     strncpy(new_node->name, name, NAME_LEN - 1);
-    new_node->name[NAME_LEN - 1] = '\0'; // 确保字符串终止
+    new_node->name[NAME_LEN - 1] = '\0';
     new_node->price = price;
     new_node->stock = stock;
     new_node->sold = sold;
@@ -52,7 +52,6 @@ void add_product() {
 
     load_products();
 
-    // 检查商品名称是否已存在
     ProductNode *current = head;
     while (current) {
         if (strcmp(current->name, name) == 0) {
@@ -75,7 +74,6 @@ void add_product() {
     char times[20];
     printf("添加时间：%s\n", get_current_time_str(times, sizeof(times)));
 
-    // 创建新节点并添加到链表头部
     ProductNode *new_node = create_product_node(get_next_id(), name, price, stock, 0, now);
     new_node->next = head;
     head = new_node;
@@ -123,7 +121,7 @@ void sell_product() {
     load_products();
 
     ProductNode *current = head;
-    // 查找商品节点
+
     while (current) {
         if (current->id == id) {
             printf("输入销售数量：");
@@ -219,7 +217,6 @@ void delete_product() {
         prev = current;
         current = current->next;
     }
-
     printf("无效ID。\n");
 }
 
