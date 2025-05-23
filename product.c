@@ -11,7 +11,6 @@
 
 #define DATA_FILE "data.txt"
 
-
 static ProductNode *head=NULL;
 
 ProductNode *create_product_node(int id, const char *name, double price, int stock, int sold, time_t added) {
