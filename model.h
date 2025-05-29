@@ -21,12 +21,13 @@ typedef struct {
 
 //蔬菜商品结构
 typedef struct {
-    int id; //商品编号
-    char name[NAME_LEN];//商品名称
-    double price;//商品价格
-    int stock;//商品库存
-    int sold;//商品已售数量
-    time_t added;//商品添加时间
+    int id; 
+    int user_id;  // 新增：关联用户ID
+    char name[NAME_LEN];
+    double price;
+    int stock;
+    int sold;
+    time_t added;
 }Product;
 
 //菜单结构-枚举类型

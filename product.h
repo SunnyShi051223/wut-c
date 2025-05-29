@@ -7,6 +7,9 @@
 
 #include "model.h"
 
+extern Product products[MAX_PRODUCTS];
+extern int count;  // Add extern declaration
+
 void add_product(); // 添加商品
 void list_product(); // 商品列表
 void sell_product(); // 销售商品

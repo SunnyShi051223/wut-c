@@ -5,9 +5,6 @@
 
 int main() {
     int choice;
-    User current_user;
-    current_user.id = 0;  // 初始未登录
-    
     do {
         printf("\n===== 助农蔬菜销售系统 =====\n");
         if (current_user.id == 0) {
@@ -31,7 +28,13 @@ int main() {
         scanf("%d", &choice);
 
         switch ((MenuChoice)choice) {
-            case MENU_ADD_PRODUCT:    add_product();    break;
+            case MENU_ADD_PRODUCT:
+                if (current_user.id == 0) {
+                    printf("请先登录系统\n");
+                } else {
+                    add_product();
+                }
+                break;
             case MENU_LIST_PRODUCT:  list_product();  break;
             case MENU_SALE_PRODUCT:   sell_product();   break;
             case MENU_RESTOCK_PRODUCT:restock_product();break;
@@ -41,11 +44,11 @@ int main() {
                 if (current_user.id == 0) {
                     if (user_login()) {
                         printf("登录成功！欢迎 %s\n", current_user.name);
-                    } else {
-                        printf("用户名或密码错误\n");
+                        load_products();  // 显式加载数据
                     }
                 } else {
-                    current_user.id = 0;  // 退出登录
+                    current_user.id = 0;
+                    count = 0;  // 退出时清空内存数据
                     printf("已退出登录\n");
                 }
                 break;
