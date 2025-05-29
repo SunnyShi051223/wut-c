@@ -8,4 +8,5 @@ add_executable(System_vagetable_sale main.c
         product.c
         product.h
         model.h
+        user.c
 )

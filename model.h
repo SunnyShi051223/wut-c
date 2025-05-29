@@ -9,6 +9,15 @@
 
 #define MAX_PRODUCTS 100
 #define NAME_LEN 100
+#define MAX_USERS 20  // 新增：最大用户数量
+
+// 新增：用户结构体
+typedef struct {
+    int id;           // 用户编号
+    char name[NAME_LEN];  // 用户名
+    char password[NAME_LEN]; // 密码
+    int is_admin;     // 是否为管理员（0-普通用户，1-管理员）
+} User;
 
 //蔬菜商品结构
 typedef struct {
@@ -36,6 +45,10 @@ typedef enum{
     MENU_STATISTICS=5,
     // 删除商品菜单
     MENU_DELETE_PRODUCT=6,
+    // 新增用户相关菜单
+    MENU_LOGIN=7,         // 用户登录
+    MENU_MANAGE_USER=8,   // 管理用户（仅管理员可见）
+    MENU_LOGOUT=9         // 用户退出
 }MenuChoice;
 
 
