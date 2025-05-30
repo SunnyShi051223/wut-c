@@ -49,7 +49,7 @@ typedef enum{
     // 新增用户相关菜单
     MENU_LOGIN=7,         // 用户登录
     MENU_MANAGE_USER=8,   // 管理用户（仅管理员可见）
-    MENU_LOGOUT=9         // 用户退出
+    MENU_LIST_USER=9         // 用户退出
 }MenuChoice;
 
 

@@ -217,12 +217,13 @@ void add_product() {
 
 // 修改商品展示逻辑（仅显示当前用户商品）
 void list_product() {
-    printf("\n=== 当前用户商品清单 ===\n");
+    printf("\n=== 当前用户 %s 商品清单 ===\n",get_current_user().name);
     for (int i = 0; i < count; i++) {
         if (products[i].user_id == get_current_user().id) {
-            printf("ID:%d 名称:%-15s 价格:%-6.2f 库存:%d\n", 
+            printf("ID:%-4d 名称:%-15s 已售:%-6d 价格:%-8.2f 库存:%-6d\n",
                  products[i].id, 
                  products[i].name,
+                 products[i].sold,
                  products[i].price,  // 新增价格显示
                  products[i].stock);
         }
