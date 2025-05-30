@@ -11,7 +11,7 @@
 #define NAME_LEN 100
 #define MAX_USERS 20  // 新增：最大用户数量
 
-// 新增：用户结构体
+// 用户结构体
 typedef struct {
     int id;           // 用户编号
     char name[NAME_LEN];  // 用户名
@@ -22,7 +22,7 @@ typedef struct {
 //蔬菜商品结构
 typedef struct {
     int id; 
-    int user_id;  // 新增：关联用户ID
+    int user_id;  // 关联用户ID
     char name[NAME_LEN];
     double price;
     int stock;
