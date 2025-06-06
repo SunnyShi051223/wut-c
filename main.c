@@ -16,11 +16,11 @@ int main() {
         printf("6. 删除商品\n");
 
         if (current_user.id == 0) {
-            printf("7. 用户登录\n");  // 未登录时显示登录选项
+            printf("7. 用户登录\n");
         } else {
             printf("7. 用户退出\n");
             if (current_user.is_admin) {
-                printf("8. 添加用户\n");  // 管理员显示管理入口
+                printf("8. 添加用户\n");
                 printf("9. 用户列表\n");
             }
         }
@@ -77,19 +77,32 @@ int main() {
                 break;
             case MENU_LOGIN:
                 if (current_user.id == 0) {
+                    if (current_user.is_login) {
+                        printf("已有用户登录，请先退出！\n");
+                        break;
+                    }
                     if (user_login()) {
+                        current_user.is_login = 1;
                         printf("登录成功！欢迎 %s\n", current_user.name);
-                        load_products();  // 显式加载数据
+                        load_products();
                     }
                 } else {
-                    current_user.id = 0;
-                    count = 0;  // 退出时清空内存数据
+                    current_user.is_login = 0;
+                    int logout_id = current_user.id;
+                    count = 0;
+                    for (int i = 0; i < user_count; i++) {
+                        if (users[i].id == logout_id) {
+                            users[i].is_login = 0;
+                            save_users();
+                            break;
+                        }
+                    }
                     printf("已退出登录\n");
                 }
                 break;
             case MENU_MANAGE_USER:
                 if (current_user.is_admin) {
-                    add_user();  // 调用用户管理函数
+                    add_user();
                 } else {
                     printf("无权限访问\n");
                 }

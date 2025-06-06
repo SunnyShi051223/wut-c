@@ -6,9 +6,9 @@
 
 #define USER_DATA_FILE "user_data.txt"  // 用户数据存储文件
 
-static User users[MAX_USERS];
-static int user_count = 0;
-User current_user;  // 移除static修饰符，改为全局变量
+User users[MAX_USERS];
+int user_count = 10;
+User current_user;
 
 
 User get_current_user() {
@@ -21,11 +21,12 @@ void load_users() {
     if (!fp) return;
     
     user_count = 0;
-    while (fscanf(fp, "%d %s %s %d", 
+    while (fscanf(fp, "%d %s %s %d %d",
         &users[user_count].id,
         users[user_count].name,
         users[user_count].password,
-        &users[user_count].is_admin) == 4) {
+        &users[user_count].is_admin,
+        &users[user_count].is_login) == 5) {
         if (user_count++ >= MAX_USERS) break;
     }
     fclose(fp);
@@ -34,17 +35,15 @@ void load_users() {
 // 保存用户数据
 void save_users() {
     FILE *fp = fopen(USER_DATA_FILE, "w");
-    if (!fp) {
-        perror("无法保存用户数据");
-        return;
-    }
+    if (!fp) return;
     
     for (int i = 0; i < user_count; i++) {
-        fprintf(fp, "%d %s %s %d\n",
+        fprintf(fp, "%d %s %s %d %d\n",
             users[i].id,
             users[i].name,
             users[i].password,
-            users[i].is_admin);
+            users[i].is_admin,
+            users[i].is_login);
     }
     fclose(fp);
 }
@@ -62,17 +61,27 @@ int user_login() {
     scanf("%s", pwd);
     
     for (int i = 0; i < user_count; i++) {
-        if (strcmp(users[i].name, name) == 0) {  // 添加缺失的大括号
+        if (strcmp(users[i].name, name) == 0) {
             if (strcmp(users[i].password, pwd) == 0) {
+                if (users[i].is_login) {
+                    printf("该用户已在其他终端登录！\n");
+                    return 0;
+                }
                 current_user = users[i];
-                load_products();  // 登录成功后加载商品数据
+                current_user.is_login = 1;
+                users[i].is_login = 1;
+                save_users();
+                load_products();
                 return 1;
             }
-            return 0;  // 密码错误直接返回
+            return 0;
         }
     }
-    return 0;  // 用户不存在
+    return 0;
 }
+
+
+
 
 // 添加用户（仅管理员）
 void add_user() {
@@ -108,7 +117,7 @@ void show_users(){
         printf("无权限操作，需要管理员身份\n");
     }
     for (int i = 0; i < user_count; i++) {
-        printf("用户名：%s，密码：%s，是否为管理员：%d\n", users[i].name, users[i].password, users[i].is_admin);
+        printf("ID:%d 用户名：%s，密码：%s，是否为管理员：%d\n",users[i].id, users[i].name, users[i].password, users[i].is_admin);
     }
 }
 

@@ -17,6 +17,7 @@ typedef struct {
     char name[NAME_LEN];  // 用户名
     char password[NAME_LEN]; // 密码
     int is_admin;     // 是否为管理员（0-普通用户，1-管理员）
+    int is_login;  // 登录状态标识 (0-未登录, 1-已登录)
 } User;
 
 //蔬菜商品结构
