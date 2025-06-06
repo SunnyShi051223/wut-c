@@ -35,7 +35,7 @@ int main() {
         switch ((MenuChoice)choice) {
             case MENU_ADD_PRODUCT:
                 if (current_user.id == 0) {
-                    printf("请先登录系统\n");
+                    printf("\n请先登录系统!\n");
                 } else {
                     add_product();
                 }
