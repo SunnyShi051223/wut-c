@@ -100,11 +100,12 @@ void add_user() {
     fflush(stdout);  // 新增：刷新输出缓冲区
     scanf("%s", new_user.name);
     printf("输入密码：");
-    fflush(stdout);  // 新增：刷新输出缓冲区
+    fflush(stdout);
     scanf("%s", new_user.password);
     printf("是否为管理员（0-否，1-是）：");
-    fflush(stdout);  // 新增：刷新输出缓冲区
+    fflush(stdout);
     scanf("%d", &new_user.is_admin);
+    new_user.is_login = 0;
     
     new_user.id = user_count + 1;
     users[user_count++] = new_user;
