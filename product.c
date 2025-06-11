@@ -1,232 +1,260 @@
 //
 // Created by 32874 on 2025/5/9.
 //
-
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
-#include <time.h>
 #include "product.h"
-#include "tool.h"
-#include "user.h"
+#include "user.h"  // 需要访问当前用户
 
-#define DATA_FILE "data.txt"
-
-
-#define MAX_PRODUCTS 100
-
+// 全局商品数据
 Product products[MAX_PRODUCTS];
-int count = 0;  // Remove static modifier
+int productCount = 0;
 
-
-
-void sell_product(){
-    load_products();
-
-    int id, qty;
-    printf("输入商品ID：");
-    fflush(stdout);
-    scanf("%d", &id);
-    if (id < 1 || id > count) {
-        printf("无效商品ID。\n");
-        fflush(stdout);
-        return;
-    }
-    printf("输入销售数量：");
-    fflush(stdout);
-    scanf("%d", &qty);
-    if (qty > products[id-1].stock) {
-        printf("库存不足！\n");
-        fflush(stdout);
-        return;
-    }
-    products[id-1].stock -= qty;
-    products[id-1].sold  += qty;
-
-    save_products();
-    printf("销售成功。\n");
-    fflush(stdout);
-}
-
-void restock_product(){
-    load_products();
-
-    int id, qty;
-    printf("输入商品ID：");
-    fflush(stdout);
-    scanf("%d", &id);
-    if (id < 1 || id > count) {
-        printf("无效商品ID。\n");
-        fflush(stdout);
-        return;
-    }
-    printf("输入补货数量：");
-    fflush(stdout);
-    scanf("%d", &qty);
-    products[id-1].stock += qty;
-
-    save_products();
-    printf("补货成功。\n");
-    fflush(stdout);
-}
-void statistics(){
-    int total = 0;
-    double revenue = 0;
-    load_products();
-
-    for (int i = 0; i < count; i++) {
-        total   += products[i].sold;
-        revenue += products[i].sold * products[i].price;
-    }
-
-    printf("总销售量：%d 件\n", total);
-    fflush(stdout);
-    printf("总收入：%.2f 元\n", revenue);
-    fflush(stdout);
-}
-
-void delete_product(){
-    load_products();
-    int id;
-    printf("输入要删除的商品ID：");
-    fflush(stdout);
-    scanf("%d", &id);
-    if (id < 1 || id > count) {
-        printf("无效ID。\n");
-        fflush(stdout);
-        return;
-    }
-    for (int i = id - 1; i < count - 1; i++) {
-        products[i] = products[i + 1];
-        products[i].id = i + 1; // 重新编号
-    }
-    count--;
-    save_products();  // 保存到文件
-    printf("商品删除成功。\n");
-    fflush(stdout);
-}
-
-// 修改后的加载函数
-// 新增：当前用户商品数据文件路径
-static char product_file[50] = {0};
-
-// 修改商品加载逻辑
-// 修改加载函数逻辑
-void load_products() {
-    if (get_current_user().id == 0) {
-        count = 0;  // 清空内存数据
-        return;
-    }
-    
-    char filename[50];
-    get_user_data_file(filename, sizeof(filename));  // 使用统一路径生成方式
-    
-    FILE *fp = fopen(filename, "r");
-    if (!fp) {
-        count = 0;  // 文件不存在时初始化空列表
-        return;
-    }
-    
-    count = 0;  // 每次加载前重置计数器
-    while (fscanf(fp, "%d %s %lf %d %d %ld %d",
-                  &products[count].id,
-                  products[count].name,
-                  &products[count].price,
-                  &products[count].stock,
-                  &products[count].sold,
-                  &products[count].added,
-                  &products[count].user_id) == 7) {  // 增加user_id字段读取
-        count++;
-        if (count >= MAX_PRODUCTS) break;
-    }
-    fclose(fp);
-}
-
-// 修改后的保存函数 
-void save_products() {
-    char filename[50];
-    get_user_data_file(filename, sizeof(filename));
-    
-    FILE *fp = fopen(filename, "w");
-    if (!fp) {
-        perror("无法打开文件进行保存");
-        return;
-    }
-
-    for (int i = 0; i < count; i++) {
-        fprintf(fp, "%d %s %lf %d %d %ld %d\n",  // 增加user_id字段
-                products[i].id,
-                products[i].name,
-                products[i].price,
-                products[i].stock,
-                products[i].sold,
-                products[i].added,
-                products[i].user_id);
-    }
-    fclose(fp);
-}
-
-// 修改添加商品逻辑
+// 添加新商品
 void add_product() {
-    if (get_current_user().id == 0) {  // 添加双重验证
-        printf("错误：请先登录系统\n");
-        return;
-    }
-    
-    Product p;
-    if (count >= MAX_PRODUCTS) {
-        printf("产品数量已达到上限，无法添加新产品。\n");
-        fflush(stdout);
+    if (currentUser.id == 0) {
+        printf("请先登录!\n");
         return;
     }
 
-    char name[50];
-    printf("请输入产品名称：");
-    fflush(stdout);
-    scanf("%49s", name);
+    if (productCount >= MAX_PRODUCTS) {
+        printf("商品数量已达上限!\n");
+        return;
+    }
 
+    Product newProduct;
+    printf("商品名称: ");
+    scanf("%49s", newProduct.name);
 
-    for (int i = 0; i < count; i++) {
-        if (strcmp(products[i].name, name) == 0) {
-            printf("商品名称 \"%s\" 已存在，禁止重复添加！\n", name);
+    // 检查商品名称是否重复
+    for (int i = 0; i < productCount; i++) {
+        if (strcmp(products[i].name, newProduct.name) == 0) {
+            printf("商品名称已存在!\n");
             return;
         }
     }
 
-    strcpy(products[count].name, name);
-    products[count].user_id = get_current_user().id;  // 确保关联用户ID
-    printf("请输入产品价格：");
-    fflush(stdout);
-    scanf("%lf", &products[count].price);
-    printf("请输入产品库存数量：");
-    fflush(stdout);
-    scanf("%d", &products[count].stock);
+    printf("单价: ");
+    scanf("%f", &newProduct.price);
+    printf("库存数量: ");
+    scanf("%d", &newProduct.stock);
 
-    products[count].id = count + 1;
-    products[count].sold = 0;
-    products[count].added = time(NULL);
+    if (newProduct.price <= 0 || newProduct.stock < 0) {
+        printf("价格或库存值不合法!\n");
+        return;
+    }
 
-    char times[20];
-    printf("添加时间：%s\n",
-           get_current_time_str(times, sizeof(times)));
-    fflush(stdout);
-    count++;
+    newProduct.id = 1000 + productCount;
+    newProduct.userId = currentUser.id;
+    products[productCount++] = newProduct;
 
     save_products();
-    printf("用户[%s]添加商品成功！\n", get_current_user().name);  // 添加用户信息反馈
+    printf("添加成功! 商品ID: %d\n", newProduct.id);
 }
 
-// 修改商品展示逻辑（仅显示当前用户商品）
-void list_product() {
-    printf("\n=== 当前用户 %s 商品清单 ===\n",get_current_user().name);
-    for (int i = 0; i < count; i++) {
-        if (products[i].user_id == get_current_user().id) {
-            printf("ID:%-4d 名称:%-15s 已售:%-6d 价格:%-8.2f 库存:%-6d\n",
-                 products[i].id, 
-                 products[i].name,
-                 products[i].sold,
-                 products[i].price,  // 新增价格显示
-                 products[i].stock);
+// 查看商品列表
+void list_products() {
+    if (currentUser.id == 0) {
+        printf("请先登录!\n");
+        return;
+    }
+
+    printf("\n%-6s %-20s %-10s %-8s %-10s\n",
+           "ID", "名称", "单价", "库存", "所有者");
+    printf("===================================================\n");
+
+    for (int i = 0; i < productCount; i++) {
+        // 管理员可查看所有商品，普通用户只能查看自己的
+        if (currentUser.role == ROLE_ADMIN ||
+            products[i].userId == currentUser.id) {
+
+            // 查找商品所有者用户名
+            char owner[20] = "未知";
+            for (int j = 0; j < userCount; j++) {
+                if (users[j].id == products[i].userId) {
+                    strcpy(owner, users[j].username);
+                    break;
+                }
+            }
+
+            printf("%-6d %-20s %-10.2f %-8d %-10s\n",
+                   products[i].id,
+                   products[i].name,
+                   products[i].price,
+                   products[i].stock,
+                   owner);
         }
+    }
+
+    if (productCount == 0) {
+        printf("暂无商品信息\n");
     }
 }
 
+// 修改商品信息
+void modify_product() {
+    if (currentUser.id == 0) {
+        printf("请先登录!\n");
+        return;
+    }
+
+    int id;
+    printf("输入要修改的商品ID: ");
+    scanf("%d", &id);
+
+    int found = -1;
+    for (int i = 0; i < productCount; i++) {
+        if (products[i].id == id) {
+            // 检查权限：只能修改自己的商品，或管理员可以修改所有
+            if (currentUser.role != ROLE_ADMIN &&
+                products[i].userId != currentUser.id) {
+                printf("只能修改自己的商品!\n");
+                return;
+            }
+            found = i;
+            break;
+        }
+    }
+
+    if (found == -1) {
+        printf("未找到该商品!\n");
+        return;
+    }
+
+    printf("当前商品信息: %s 单价: %.2f 库存: %d\n",
+           products[found].name,
+           products[found].price,
+           products[found].stock);
+
+    printf("请输入新的商品名称(直接回车保留原值): ");
+    char new_name[MAX_NAME_LEN];
+    getchar();  // 清除输入缓冲区
+    if (fgets(new_name, sizeof(new_name), stdin) != NULL) {
+        // 移除末尾的换行符
+        new_name[strcspn(new_name, "\n")] = 0;
+
+        if (strlen(new_name) > 0) {
+            // 检查新名称是否与其他商品重复
+            for (int i = 0; i < productCount; i++) {
+                if (i != found && strcmp(products[i].name, new_name) == 0) {
+                    printf("商品名称已存在!\n");
+                    return;
+                }
+            }
+            strcpy(products[found].name, new_name);
+        }
+    }
+
+    printf("请输入新的价格(0保留原值): ");
+    float new_price;
+    if (scanf("%f", &new_price) == 1 && new_price > 0) {
+        products[found].price = new_price;
+    }
+
+    printf("请输入新的库存数量(0保留原值): ");
+    int new_stock;
+    if (scanf("%d", &new_stock) == 1 && new_stock >= 0) {
+        products[found].stock = new_stock;
+    }
+
+    save_products();
+    printf("商品信息修改成功!\n");
+}
+
+// 搜索商品
+void search_product() {
+    if (currentUser.id == 0) {
+        printf("请先登录!\n");
+        return;
+    }
+
+    char keyword[50];
+    printf("请输入搜索关键字: ");
+    scanf("%49s", keyword);
+
+    printf("\n=== 搜索结果 ===\n");
+    int found = 0;
+
+    for (int i = 0; i < productCount; i++) {
+        // 只搜索当前用户的商品
+        if (products[i].userId == currentUser.id &&
+            strstr(products[i].name, keyword) != NULL) {
+
+            printf("ID:%-6d 名称:%-15s 价格:%-8.2f 库存:%-6d\n",
+                   products[i].id,
+                   products[i].name,
+                   products[i].price,
+                   products[i].stock);
+            found = 1;
+        }
+    }
+
+    if (!found) {
+        printf("未找到匹配商品\n");
+    }
+}
+
+// 删除商品
+void delete_product() {
+    if (currentUser.id == 0) {
+        printf("请先登录!\n");
+        return;
+    }
+
+    int id;
+    printf("输入要删除的商品ID: ");
+    scanf("%d", &id);
+
+    for (int i = 0; i < productCount; i++) {
+        if (products[i].id == id) {
+            // 检查权限
+            if (currentUser.role != ROLE_ADMIN &&
+                products[i].userId != currentUser.id) {
+                printf("只能删除自己的商品!\n");
+                return;
+            }
+
+            // 从商品数组中移除
+            for (int j = i; j < productCount - 1; j++) {
+                products[j] = products[j + 1];
+            }
+            productCount--;
+
+            save_products();
+            printf("商品删除成功!\n");
+            return;
+        }
+    }
+
+    printf("未找到该商品!\n");
+}
+
+// 保存商品数据到文件
+void save_products() {
+    FILE *fp = fopen(DATA_FILE, "ab");  // 追加模式
+    if (!fp) {
+        printf("保存商品数据失败!\n");
+        return;
+    }
+
+    // 保存商品数量和商品数据
+    fseek(fp, sizeof(int) + (sizeof(User) * userCount), SEEK_SET);
+    fwrite(&productCount, sizeof(int), 1, fp);
+    fwrite(products, sizeof(Product), productCount, fp);
+    fclose(fp);
+}
+
+// 从文件加载商品数据
+void load_products() {
+    FILE *fp = fopen(DATA_FILE, "rb");
+    if (!fp) return;
+
+    // 跳过用户数据部分
+    fseek(fp, sizeof(int) + (sizeof(User) * userCount), SEEK_SET);
+
+    fread(&productCount, sizeof(int), 1, fp);
+    if (productCount > MAX_PRODUCTS) productCount = MAX_PRODUCTS;
+    fread(products, sizeof(Product), productCount, fp);
+    fclose(fp);
+}

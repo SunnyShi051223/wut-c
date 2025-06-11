@@ -1,7 +1,15 @@
 #ifndef SYSTEM_VAGETABLE_SALE_USER_H
 #define SYSTEM_VAGETABLE_SALE_USER_H
 
-#include "model.h"
+#include "common.h"
+
+// 用户结构体
+typedef struct {
+    int id;
+    char username[MAX_NAME_LEN];
+    char password[65];
+    UserRole role;
+} User;
 
 void load_users();
 void save_users();

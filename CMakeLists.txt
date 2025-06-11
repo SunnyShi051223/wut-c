@@ -9,4 +9,7 @@ add_executable(System_vagetable_sale main.c
         product.h
         model.h
         user.c
+        sha256.h
+        sha256.c
+        common.h
 )

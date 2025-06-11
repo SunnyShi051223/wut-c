@@ -5,20 +5,30 @@
 #ifndef SYSTEM_VAGETABLE_SALE_PRODUCT_H
 #define SYSTEM_VAGETABLE_SALE_PRODUCT_H
 
-#include "model.h"
 
-extern Product products[MAX_PRODUCTS];
-extern int count;
+#include "common.h"
 
-void add_product(); // 添加商品
-void list_product(); // 商品列表
-void sell_product(); // 销售商品
-void restock_product();//补货商品
-void statistics();//统计
-void delete_product();//删除商品
+// 商品结构体
+typedef struct {
+    int id;
+    char name[MAX_NAME_LEN];
+    float price;
+    int stock;
+    int userId;  // 所属用户ID
+} Product;
 
+// 全局商品数据
+extern Product products[];
+extern int productCount;
 
-void load_products();
+// 商品管理函数
+void add_product();
+void list_products();
+void modify_product();
+void search_product();
 void save_products();
+void load_products();
+void delete_product();
+
 
 #endif //SYSTEM_VAGETABLE_SALE_PRODUCT_H
