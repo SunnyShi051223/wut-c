@@ -1,0 +1,3 @@
+D:/c_cpp/wut-c/cmake-build-debug/CMakeFiles/System_vagetable_sale.dir
+D:/c_cpp/wut-c/cmake-build-debug/CMakeFiles/edit_cache.dir
+D:/c_cpp/wut-c/cmake-build-debug/CMakeFiles/rebuild_cache.dir

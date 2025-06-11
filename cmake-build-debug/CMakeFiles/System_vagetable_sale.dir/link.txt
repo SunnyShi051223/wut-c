@@ -1,0 +1,3 @@
+"D:\Clion\CLion 2024.1\bin\cmake\win\x64\bin\cmake.exe" -E rm -f CMakeFiles\System_vagetable_sale.dir/objects.a
+D:\MSYS2\mingw64\bin\ar.exe qc CMakeFiles\System_vagetable_sale.dir/objects.a @CMakeFiles\System_vagetable_sale.dir\objects1.rsp
+D:\MSYS2\mingw64\bin\cc.exe -g -Wl,--whole-archive CMakeFiles\System_vagetable_sale.dir/objects.a -Wl,--no-whole-archive -o System_vagetable_sale.exe -Wl,--out-implib,libSystem_vagetable_sale.dll.a -Wl,--major-image-version,0,--minor-image-version,0 @CMakeFiles\System_vagetable_sale.dir\linkLibs.rsp

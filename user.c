@@ -2,18 +2,15 @@
 #include <stdlib.h>
 #include <string.h>
 #include "user.h"
-#include "sha256.h"
 
-// 全局用户数据
 User users[MAX_USERS];
 int userCount = 0;
-User currentUser = {0};  // 当前登录用户
+User currentUser = {0};
 
-// 初始化管理员账户（如果没有用户）
+// 初始化管理员账户
 void add_admin_if_empty() {
     if (userCount == 0) {
-        User admin = {1, "admin", "", ROLE_ADMIN};
-        sha256_hash("admin123", admin.password);
+        User admin = {1, "admin", "admin123", ROLE_ADMIN};
         users[userCount++] = admin;
         printf("已创建默认管理员账号: admin/admin123\n");
     }
@@ -38,15 +35,11 @@ void register_user() {
         }
     }
 
-    char plainPwd[MAX_NAME_LEN];
     printf("请输入密码: ");
-    scanf("%49s", plainPwd);
-
-    sha256_hash(plainPwd, newUser.password);
+    scanf("%49s", newUser.password);
 
     newUser.id = 1000 + userCount;
-    newUser.role = ROLE_USER;  // 默认为普通用户
-
+    newUser.role = ROLE_USER;
     users[userCount++] = newUser;
     printf("注册成功! ID: %d\n", newUser.id);
 
@@ -61,12 +54,9 @@ int login() {
     printf("密码: ");
     scanf("%49s", password);
 
-    char encrypted[65];
-    sha256_hash(password, encrypted);
-
     for (int i = 0; i < userCount; i++) {
         if (strcmp(users[i].username, username) == 0 &&
-            strcmp(users[i].password, encrypted) == 0) {
+            strcmp(users[i].password, password) == 0) {
             currentUser = users[i];
             printf("登录成功! %s\n",
                    currentUser.role == ROLE_ADMIN ? "[管理员]" : "");
@@ -88,11 +78,7 @@ void change_password() {
     printf("请输入原密码: ");
     scanf("%49s", old_pwd);
 
-    char old_encrypted[65];
-    sha256_hash(old_pwd, old_encrypted);
-
-    // 验证原密码
-    if (strcmp(old_encrypted, currentUser.password) != 0) {
+    if (strcmp(old_pwd, currentUser.password) != 0) {
         printf("原密码错误!\n");
         return;
     }
@@ -107,13 +93,11 @@ void change_password() {
         return;
     }
 
-    // 更新密码
-    sha256_hash(new_pwd, currentUser.password);
+    strcpy(currentUser.password, new_pwd);
 
-    // 更新用户列表
     for (int i = 0; i < userCount; i++) {
         if (users[i].id == currentUser.id) {
-            strcpy(users[i].password, currentUser.password);
+            strcpy(users[i].password, new_pwd);
             break;
         }
     }
@@ -122,7 +106,7 @@ void change_password() {
     printf("密码修改成功!\n");
 }
 
-// 列出所有用户（管理员）
+// 列出所有用户
 void list_users() {
     if (currentUser.role != ROLE_ADMIN) {
         printf("权限不足!\n");
@@ -139,7 +123,7 @@ void list_users() {
     }
 }
 
-// 删除用户（管理员）
+// 删除用户
 void delete_user() {
     if (currentUser.role != ROLE_ADMIN) {
         printf("权限不足!\n");
@@ -157,7 +141,6 @@ void delete_user() {
 
     for (int i = 0; i < userCount; i++) {
         if (users[i].id == id) {
-            // 从用户数组中移除
             for (int j = i; j < userCount - 1; j++) {
                 users[j] = users[j + 1];
             }
@@ -172,7 +155,7 @@ void delete_user() {
     printf("未找到该用户!\n");
 }
 
-// 保存用户数据到文件
+// 保存用户数据
 void save_users() {
     FILE *fp = fopen(DATA_FILE, "wb");
     if (!fp) {
@@ -185,7 +168,7 @@ void save_users() {
     fclose(fp);
 }
 
-// 从文件加载用户数据
+// 加载用户数据
 void load_users() {
     FILE *fp = fopen(DATA_FILE, "rb");
     if (!fp) return;

@@ -1,5 +1,5 @@
-#ifndef SYSTEM_VAGETABLE_SALE_USER_H
-#define SYSTEM_VAGETABLE_SALE_USER_H
+#ifndef USER_H
+#define USER_H
 
 #include "common.h"
 
@@ -7,22 +7,21 @@
 typedef struct {
     int id;
     char username[MAX_NAME_LEN];
-    char password[65];
+    char password[MAX_NAME_LEN];
     UserRole role;
 } User;
 
-void load_users();
+extern User users[];
+extern int userCount;
+extern User currentUser;
+
+void register_user();
+int login();
+void change_password();
+void list_users();
+void delete_user();
 void save_users();
-int user_login();
-void add_user();
-void show_users();
-
-extern User current_user;
-extern int user_count;
-extern User users[MAX_USERS];
-
-User get_current_user(void);
-void get_user_data_file(char *buffer, size_t size);
-
+void load_users();
+void add_admin_if_empty();
 
 #endif

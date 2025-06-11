@@ -1,9 +1,7 @@
-//
-// Created by 32874 on 2025/6/11.
-//
+#ifndef COMMON_H
+#define COMMON_H
 
-#ifndef SYSTEM_VAGETABLE_SALE_COMMON_H
-#define SYSTEM_VAGETABLE_SALE_COMMON_H
+// 系统配置常量
 #define MAX_USERS 50
 #define MAX_PRODUCTS 100
 #define MAX_NAME_LEN 50
@@ -14,4 +12,5 @@ typedef enum {
     ROLE_ADMIN,
     ROLE_USER
 } UserRole;
-#endif //SYSTEM_VAGETABLE_SALE_COMMON_H
+
+#endif

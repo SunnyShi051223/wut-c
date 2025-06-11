@@ -62,9 +62,6 @@ int main() {
     load_users();
     load_products();
 
-    // 初始化管理员账户（如果需要）
-    add_admin_if_empty();
-
     int main_choice;
     do {
         printf("\n======== 助农蔬菜销售系统 ========\n");
@@ -90,12 +87,13 @@ int main() {
                     } else {
                         user_menu();
                     }
-                    // 退出登录
                     currentUser.id = 0;
                 }
                 break;
             case 3:
-                printf("感谢使用!\n");
+                save_users();
+                save_products();
+                printf("感谢使用! 已保存数据\n");
                 exit(0);
             default: printf("无效选择!\n");
         }
