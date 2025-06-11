@@ -89,12 +89,6 @@
 		<Unit filename="D:/c_cpp/wut-c/product.h">
 			<Option target="System_vagetable_sale"/>
 		</Unit>
-		<Unit filename="D:/c_cpp/wut-c/sha256.c">
-			<Option target="System_vagetable_sale"/>
-		</Unit>
-		<Unit filename="D:/c_cpp/wut-c/sha256.h">
-			<Option target="System_vagetable_sale"/>
-		</Unit>
 		<Unit filename="D:/c_cpp/wut-c/tool.c">
 			<Option target="System_vagetable_sale"/>
 		</Unit>

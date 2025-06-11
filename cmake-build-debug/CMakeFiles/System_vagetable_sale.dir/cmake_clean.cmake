@@ -3,8 +3,6 @@ file(REMOVE_RECURSE
   "CMakeFiles/System_vagetable_sale.dir/main.c.obj.d"
   "CMakeFiles/System_vagetable_sale.dir/product.c.obj"
   "CMakeFiles/System_vagetable_sale.dir/product.c.obj.d"
-  "CMakeFiles/System_vagetable_sale.dir/sha256.c.obj"
-  "CMakeFiles/System_vagetable_sale.dir/sha256.c.obj.d"
   "CMakeFiles/System_vagetable_sale.dir/tool.c.obj"
   "CMakeFiles/System_vagetable_sale.dir/tool.c.obj.d"
   "CMakeFiles/System_vagetable_sale.dir/user.c.obj"

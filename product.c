@@ -21,6 +21,7 @@ void add_product() {
 
     Product newProduct;
     printf("商品名称: ");
+    fflush(stdout);
     scanf("%49s", newProduct.name);
 
     // 检查重复名称
@@ -32,8 +33,11 @@ void add_product() {
     }
 
     printf("单价: ");
+    fflush(stdout);
     scanf("%f", &newProduct.price);
+
     printf("库存数量: ");
+    fflush(stdout);
     scanf("%d", &newProduct.stock);
 
     if (newProduct.price <= 0 || newProduct.stock < 0) {
@@ -93,6 +97,7 @@ void modify_product() {
 
     int id;
     printf("输入要修改的商品ID: ");
+    fflush(stdout);
     scanf("%d", &id);
 
     int found = -1;
@@ -116,6 +121,7 @@ void modify_product() {
            products[found].name, products[found].price, products[found].stock);
 
     printf("请输入新的商品名称(直接回车保留原值): ");
+    fflush(stdout);
     char new_name[MAX_NAME_LEN];
     getchar();
     if (fgets(new_name, sizeof(new_name), stdin) != NULL) {
@@ -132,12 +138,14 @@ void modify_product() {
     }
 
     printf("请输入新的价格(0保留原值): ");
+    fflush(stdout);
     float new_price;
     if (scanf("%f", &new_price) == 1 && new_price > 0) {
         products[found].price = new_price;
     }
 
     printf("请输入新的库存数量(0保留原值): ");
+    fflush(stdout);
     int new_stock;
     if (scanf("%d", &new_stock) == 1 && new_stock >= 0) {
         products[found].stock = new_stock;
@@ -156,9 +164,11 @@ void search_product() {
 
     char keyword[50];
     printf("请输入搜索关键字: ");
+    fflush(stdout);
     scanf("%49s", keyword);
 
     printf("\n=== 搜索结果 ===\n");
+    fflush(stdout);
     int found = 0;
 
     for (int i = 0; i < productCount; i++) {
@@ -183,6 +193,7 @@ void delete_product() {
 
     int id;
     printf("输入要删除的商品ID: ");
+    fflush(stdout);
     scanf("%d", &id);
 
     for (int i = 0; i < productCount; i++) {
@@ -206,31 +217,41 @@ void delete_product() {
     printf("未找到该商品!\n");
 }
 
-// 保存商品数据
+// 保存商品数据到文本文件
 void save_products() {
-    FILE *fp = fopen(DATA_FILE, "ab");
+    FILE *fp = fopen(PRODUCT_FILE, "w");
     if (!fp) {
         printf("保存商品数据失败!\n");
         return;
     }
 
-    // 移动文件指针到用户数据之后
-    fseek(fp, sizeof(int) + (sizeof(User) * userCount), SEEK_SET);
-    fwrite(&productCount, sizeof(int), 1, fp);
-    fwrite(products, sizeof(Product), productCount, fp);
+    fprintf(fp, "%d\n", productCount);
+    for (int i = 0; i < productCount; i++) {
+        fprintf(fp, "%d %s %.2f %d %d\n",
+                products[i].id,
+                products[i].name,
+                products[i].price,
+                products[i].stock,
+                products[i].userId);
+    }
     fclose(fp);
 }
 
-// 加载商品数据
+// 从文本文件加载商品数据
 void load_products() {
-    FILE *fp = fopen(DATA_FILE, "rb");
+    FILE *fp = fopen(PRODUCT_FILE, "r");
     if (!fp) return;
 
-    // 跳过用户数据部分
-    fseek(fp, sizeof(int) + (sizeof(User) * userCount), SEEK_SET);
-
-    fread(&productCount, sizeof(int), 1, fp);
+    fscanf(fp, "%d", &productCount);
     if (productCount > MAX_PRODUCTS) productCount = MAX_PRODUCTS;
-    fread(products, sizeof(Product), productCount, fp);
+
+    for (int i = 0; i < productCount; i++) {
+        fscanf(fp, "%d %s %f %d %d",
+               &products[i].id,
+               products[i].name,
+               &products[i].price,
+               &products[i].stock,
+               &products[i].userId);
+    }
     fclose(fp);
 }

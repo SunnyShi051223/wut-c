@@ -15,6 +15,7 @@ void admin_menu() {
         printf("5. 修改密码\n");
         printf("0. 返回主菜单\n");
         printf("====================\n选择操作: ");
+        fflush(stdout);
         scanf("%d", &choice);
 
         switch (choice) {
@@ -42,6 +43,7 @@ void user_menu() {
         printf("6. 修改密码\n");
         printf("0. 返回主菜单\n");
         printf("=======================\n选择操作: ");
+        fflush(stdout);
         scanf("%d", &choice);
 
         switch (choice) {
@@ -58,9 +60,10 @@ void user_menu() {
 }
 
 int main() {
-    // 加载数据
+    printf("正在加载数据...\n");
     load_users();
     load_products();
+    printf("数据加载完成!\n");
 
     int main_choice;
     do {
@@ -76,6 +79,7 @@ int main() {
         printf("2. 登录\n");
         printf("3. 退出系统\n");
         printf("=================================\n选择操作: ");
+        fflush(stdout);
         scanf("%d", &main_choice);
 
         switch (main_choice) {
@@ -87,13 +91,13 @@ int main() {
                     } else {
                         user_menu();
                     }
-                    currentUser.id = 0;
+                    currentUser.id = 0; // 退出登录
                 }
                 break;
             case 3:
                 save_users();
                 save_products();
-                printf("感谢使用! 已保存数据\n");
+                printf("感谢使用! 数据已保存至 users.txt 和 products.txt\n");
                 exit(0);
             default: printf("无效选择!\n");
         }

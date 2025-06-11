@@ -5,7 +5,8 @@
 #define MAX_USERS 50
 #define MAX_PRODUCTS 100
 #define MAX_NAME_LEN 50
-#define DATA_FILE "farm_data.dat"
+#define USER_FILE "users.txt"
+#define PRODUCT_FILE "products.txt"
 
 // 用户角色枚举
 typedef enum {

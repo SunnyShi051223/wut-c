@@ -176,30 +176,6 @@ product.c.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\System_vagetable_sale.dir\build.make CMakeFiles/System_vagetable_sale.dir/product.c.s
 .PHONY : product.c.s
 
-sha256.obj: sha256.c.obj
-.PHONY : sha256.obj
-
-# target to build an object file
-sha256.c.obj:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\System_vagetable_sale.dir\build.make CMakeFiles/System_vagetable_sale.dir/sha256.c.obj
-.PHONY : sha256.c.obj
-
-sha256.i: sha256.c.i
-.PHONY : sha256.i
-
-# target to preprocess a source file
-sha256.c.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\System_vagetable_sale.dir\build.make CMakeFiles/System_vagetable_sale.dir/sha256.c.i
-.PHONY : sha256.c.i
-
-sha256.s: sha256.c.s
-.PHONY : sha256.s
-
-# target to generate assembly for a file
-sha256.c.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\System_vagetable_sale.dir\build.make CMakeFiles/System_vagetable_sale.dir/sha256.c.s
-.PHONY : sha256.c.s
-
 tool.obj: tool.c.obj
 .PHONY : tool.obj
 
@@ -263,9 +239,6 @@ help:
 	@echo ... product.obj
 	@echo ... product.i
 	@echo ... product.s
-	@echo ... sha256.obj
-	@echo ... sha256.i
-	@echo ... sha256.s
 	@echo ... tool.obj
 	@echo ... tool.i
 	@echo ... tool.s

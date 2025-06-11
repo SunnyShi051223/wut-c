@@ -13,6 +13,7 @@ void add_admin_if_empty() {
         User admin = {1, "admin", "admin123", ROLE_ADMIN};
         users[userCount++] = admin;
         printf("已创建默认管理员账号: admin/admin123\n");
+        save_users(); // 立即保存新用户
     }
 }
 
@@ -25,6 +26,7 @@ void register_user() {
 
     User newUser;
     printf("请输入用户名: ");
+    fflush(stdout);
     scanf("%49s", newUser.username);
 
     // 检查用户名是否存在
@@ -36,6 +38,7 @@ void register_user() {
     }
 
     printf("请输入密码: ");
+    fflush(stdout);
     scanf("%49s", newUser.password);
 
     newUser.id = 1000 + userCount;
@@ -50,8 +53,11 @@ void register_user() {
 int login() {
     char username[MAX_NAME_LEN], password[MAX_NAME_LEN];
     printf("用户名: ");
+    fflush(stdout);
     scanf("%49s", username);
+
     printf("密码: ");
+    fflush(stdout);
     scanf("%49s", password);
 
     for (int i = 0; i < userCount; i++) {
@@ -76,6 +82,7 @@ void change_password() {
 
     char old_pwd[MAX_NAME_LEN], new_pwd[MAX_NAME_LEN], confirm_pwd[MAX_NAME_LEN];
     printf("请输入原密码: ");
+    fflush(stdout);
     scanf("%49s", old_pwd);
 
     if (strcmp(old_pwd, currentUser.password) != 0) {
@@ -84,8 +91,11 @@ void change_password() {
     }
 
     printf("请输入新密码: ");
+    fflush(stdout);
     scanf("%49s", new_pwd);
+
     printf("请确认新密码: ");
+    fflush(stdout);
     scanf("%49s", confirm_pwd);
 
     if (strcmp(new_pwd, confirm_pwd) != 0) {
@@ -132,6 +142,7 @@ void delete_user() {
 
     int id;
     printf("输入要删除的用户ID: ");
+    fflush(stdout);
     scanf("%d", &id);
 
     if (id == currentUser.id) {
@@ -155,28 +166,43 @@ void delete_user() {
     printf("未找到该用户!\n");
 }
 
-// 保存用户数据
+// 保存用户数据到文本文件
 void save_users() {
-    FILE *fp = fopen(DATA_FILE, "wb");
+    FILE *fp = fopen(USER_FILE, "w");
     if (!fp) {
         printf("保存用户数据失败!\n");
         return;
     }
 
-    fwrite(&userCount, sizeof(int), 1, fp);
-    fwrite(users, sizeof(User), userCount, fp);
+    fprintf(fp, "%d\n", userCount);
+    for (int i = 0; i < userCount; i++) {
+        fprintf(fp, "%d %s %s %d\n",
+                users[i].id,
+                users[i].username,
+                users[i].password,
+                users[i].role);
+    }
     fclose(fp);
 }
 
-// 加载用户数据
+// 从文本文件加载用户数据
 void load_users() {
-    FILE *fp = fopen(DATA_FILE, "rb");
-    if (!fp) return;
+    FILE *fp = fopen(USER_FILE, "r");
+    if (!fp) {
+        // 文件不存在时创建默认管理员
+        add_admin_if_empty();
+        return;
+    }
 
-    fread(&userCount, sizeof(int), 1, fp);
+    fscanf(fp, "%d", &userCount);
     if (userCount > MAX_USERS) userCount = MAX_USERS;
-    fread(users, sizeof(User), userCount, fp);
-    fclose(fp);
 
-    add_admin_if_empty();
+    for (int i = 0; i < userCount; i++) {
+        fscanf(fp, "%d %s %s %d",
+               &users[i].id,
+               users[i].username,
+               users[i].password,
+               (int*)&users[i].role);
+    }
+    fclose(fp);
 }

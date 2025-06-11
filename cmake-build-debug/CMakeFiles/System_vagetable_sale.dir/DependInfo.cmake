@@ -10,7 +10,6 @@ set(CMAKE_DEPENDS_LANGUAGES
 set(CMAKE_DEPENDS_DEPENDENCY_FILES
   "D:/c_cpp/wut-c/main.c" "CMakeFiles/System_vagetable_sale.dir/main.c.obj" "gcc" "CMakeFiles/System_vagetable_sale.dir/main.c.obj.d"
   "D:/c_cpp/wut-c/product.c" "CMakeFiles/System_vagetable_sale.dir/product.c.obj" "gcc" "CMakeFiles/System_vagetable_sale.dir/product.c.obj.d"
-  "D:/c_cpp/wut-c/sha256.c" "CMakeFiles/System_vagetable_sale.dir/sha256.c.obj" "gcc" "CMakeFiles/System_vagetable_sale.dir/sha256.c.obj.d"
   "D:/c_cpp/wut-c/tool.c" "CMakeFiles/System_vagetable_sale.dir/tool.c.obj" "gcc" "CMakeFiles/System_vagetable_sale.dir/tool.c.obj.d"
   "D:/c_cpp/wut-c/user.c" "CMakeFiles/System_vagetable_sale.dir/user.c.obj" "gcc" "CMakeFiles/System_vagetable_sale.dir/user.c.obj.d"
   )

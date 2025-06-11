@@ -9,10 +9,12 @@ CMakeFiles/System_vagetable_sale.dir/user.c.obj: D:\c_cpp\wut-c\user.c \
  D:\MSYS2\mingw64\include/_mingw_off_t.h \
  D:\MSYS2\mingw64\include/swprintf.inl \
  D:\MSYS2\mingw64\include/sec_api/stdio_s.h \
- D:\MSYS2\mingw64\include/string.h D:\MSYS2\mingw64\include/crtdefs.h \
- D:\MSYS2\mingw64\include/sec_api/string_s.h D:\c_cpp\wut-c\model.h \
- D:\MSYS2\mingw64\include/time.h D:\MSYS2\mingw64\include/sys/timeb.h \
- D:\MSYS2\mingw64\include/sec_api/sys/timeb_s.h \
- D:\MSYS2\mingw64\include/_timeval.h \
- D:\MSYS2\mingw64\include/pthread_time.h \
- D:\MSYS2\mingw64\include/pthread_compat.h D:\c_cpp\wut-c\product.h
+ D:\MSYS2\mingw64\include/stdlib.h \
+ D:\MSYS2\mingw64\include/corecrt_wstdlib.h \
+ D:\MSYS2\mingw64\include/limits.h D:\MSYS2\mingw64\include/crtdefs.h \
+ D:\MSYS2\mingw64\include/sec_api/stdlib_s.h \
+ D:\MSYS2\mingw64\include/malloc.h \
+ D:/MSYS2/mingw64/lib/gcc/x86_64-w64-mingw32/14.2.0/include/mm_malloc.h \
+ D:\MSYS2\mingw64\include/errno.h D:\MSYS2\mingw64\include/string.h \
+ D:\MSYS2\mingw64\include/sec_api/string_s.h D:\c_cpp\wut-c\user.h \
+ D:\c_cpp\wut-c\common.h
