@@ -46,32 +46,6 @@ int db_add_user(const char *username, const char *password, UserRole role) {
     return mysql_insert_id(conn);
 }
 
-User db_get_user(int user_id) {
-    User user = {0};
-    char query[100];
-    sprintf(query, "SELECT * FROM users WHERE id = %d", user_id);
-
-    if (mysql_query(conn, query)) {
-        fprintf(stderr, "Get user failed: %s\n", mysql_error(conn));
-        return user;
-    }
-
-    MYSQL_RES *result = mysql_store_result(conn);
-    if (result == NULL) {
-        return user;
-    }
-
-    MYSQL_ROW row = mysql_fetch_row(result);
-    if (row) {
-        user.id = atoi(row[0]);
-        strcpy(user.username, row[1]);
-        strcpy(user.password, row[2]);
-        user.role = (strcmp(row[3], "admin") == 0) ? ROLE_ADMIN : ROLE_USER;
-    }
-
-    mysql_free_result(result);
-    return user;
-}
 
 User db_get_user_by_username(const char *username) {
     User user = {0};
@@ -299,7 +273,6 @@ int db_list_products(int user_id, int is_admin) {
         return 0;
     }
 
-    int num_fields = mysql_num_fields(result);
     int num_rows = mysql_num_rows(result);
 
     if (num_rows == 0) {

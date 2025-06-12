@@ -33,7 +33,6 @@ void db_close();
 
 // 用户管理
 int db_add_user(const char *username, const char *password, UserRole role);
-User db_get_user(int user_id);
 User db_get_user_by_username(const char *username);
 int db_update_user(int user_id, const char *password);
 int db_delete_user(int user_id);
