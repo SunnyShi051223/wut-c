@@ -1,4 +1,6 @@
 file(REMOVE_RECURSE
+  "CMakeFiles/System_vagetable_sale.dir/db.c.obj"
+  "CMakeFiles/System_vagetable_sale.dir/db.c.obj.d"
   "CMakeFiles/System_vagetable_sale.dir/main.c.obj"
   "CMakeFiles/System_vagetable_sale.dir/main.c.obj.d"
   "CMakeFiles/System_vagetable_sale.dir/product.c.obj"

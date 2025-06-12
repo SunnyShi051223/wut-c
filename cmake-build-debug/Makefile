@@ -128,6 +128,30 @@ System_vagetable_sale/fast:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\System_vagetable_sale.dir\build.make CMakeFiles/System_vagetable_sale.dir/build
 .PHONY : System_vagetable_sale/fast
 
+db.obj: db.c.obj
+.PHONY : db.obj
+
+# target to build an object file
+db.c.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\System_vagetable_sale.dir\build.make CMakeFiles/System_vagetable_sale.dir/db.c.obj
+.PHONY : db.c.obj
+
+db.i: db.c.i
+.PHONY : db.i
+
+# target to preprocess a source file
+db.c.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\System_vagetable_sale.dir\build.make CMakeFiles/System_vagetable_sale.dir/db.c.i
+.PHONY : db.c.i
+
+db.s: db.c.s
+.PHONY : db.s
+
+# target to generate assembly for a file
+db.c.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\System_vagetable_sale.dir\build.make CMakeFiles/System_vagetable_sale.dir/db.c.s
+.PHONY : db.c.s
+
 main.obj: main.c.obj
 .PHONY : main.obj
 
@@ -233,6 +257,9 @@ help:
 	@echo ... edit_cache
 	@echo ... rebuild_cache
 	@echo ... System_vagetable_sale
+	@echo ... db.obj
+	@echo ... db.i
+	@echo ... db.s
 	@echo ... main.obj
 	@echo ... main.i
 	@echo ... main.s

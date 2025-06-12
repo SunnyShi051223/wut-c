@@ -4,7 +4,7 @@
 # compile C with D:/MSYS2/mingw64/bin/cc.exe
 C_DEFINES = 
 
-C_INCLUDES = 
+C_INCLUDES = @CMakeFiles/System_vagetable_sale.dir/includes_C.rsp
 
 C_FLAGS = -g -std=gnu11 -fdiagnostics-color=always
 

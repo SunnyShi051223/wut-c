@@ -24,6 +24,7 @@
 				<Option type="1"/>
 				<Option compiler="gcc"/>
 				<Compiler>
+					<Add directory="C:/Program Files/MySQL/MySQL Server 8.0/include"/>
 					<Add directory="D:/MSYS2/mingw64/bin/../lib/gcc/x86_64-w64-mingw32/14.2.0/include"/>
 					<Add directory="D:/MSYS2/mingw64/bin/../lib/gcc/x86_64-w64-mingw32/14.2.0/../../../../include"/>
 					<Add directory="D:/MSYS2/mingw64/bin/../lib/gcc/x86_64-w64-mingw32/14.2.0/include-fixed"/>
@@ -42,6 +43,7 @@
 				<Option type="1"/>
 				<Option compiler="gcc"/>
 				<Compiler>
+					<Add directory="C:/Program Files/MySQL/MySQL Server 8.0/include"/>
 					<Add directory="D:/MSYS2/mingw64/bin/../lib/gcc/x86_64-w64-mingw32/14.2.0/include"/>
 					<Add directory="D:/MSYS2/mingw64/bin/../lib/gcc/x86_64-w64-mingw32/14.2.0/../../../../include"/>
 					<Add directory="D:/MSYS2/mingw64/bin/../lib/gcc/x86_64-w64-mingw32/14.2.0/include-fixed"/>
@@ -75,6 +77,12 @@
 			</Target>
 		</Build>
 		<Unit filename="D:/c_cpp/wut-c/common.h">
+			<Option target="System_vagetable_sale"/>
+		</Unit>
+		<Unit filename="D:/c_cpp/wut-c/db.c">
+			<Option target="System_vagetable_sale"/>
+		</Unit>
+		<Unit filename="D:/c_cpp/wut-c/db.h">
 			<Option target="System_vagetable_sale"/>
 		</Unit>
 		<Unit filename="D:/c_cpp/wut-c/main.c">

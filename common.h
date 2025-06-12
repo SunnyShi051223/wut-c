@@ -1,13 +1,14 @@
 #ifndef COMMON_H
 #define COMMON_H
 
+// MySQL 数据库配置
+#define DB_HOST "localhost"
+#define DB_USER "root"
+#define DB_PASSWORD "shisannian1223"
+#define DB_NAME "vagetable"
+
 // 系统配置常量
-#define MAX_USERS 50
-#define MAX_PRODUCTS 100
 #define MAX_NAME_LEN 50
-#define USER_FILE "users.txt"
-#define PRODUCT_FILE "products.txt"
-#define LOGGED_USERS_FILE "logged_users.txt"
 
 // 用户角色枚举
 typedef enum {

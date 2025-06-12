@@ -69,6 +69,7 @@ include CMakeFiles/System_vagetable_sale.dir/progress.make
 include CMakeFiles/System_vagetable_sale.dir/flags.make
 
 CMakeFiles/System_vagetable_sale.dir/main.c.obj: CMakeFiles/System_vagetable_sale.dir/flags.make
+CMakeFiles/System_vagetable_sale.dir/main.c.obj: CMakeFiles/System_vagetable_sale.dir/includes_C.rsp
 CMakeFiles/System_vagetable_sale.dir/main.c.obj: D:/c_cpp/wut-c/main.c
 CMakeFiles/System_vagetable_sale.dir/main.c.obj: CMakeFiles/System_vagetable_sale.dir/compiler_depend.ts
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=D:\c_cpp\wut-c\cmake-build-debug\CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building C object CMakeFiles/System_vagetable_sale.dir/main.c.obj"
@@ -83,6 +84,7 @@ CMakeFiles/System_vagetable_sale.dir/main.c.s: cmake_force
 	D:\MSYS2\mingw64\bin\cc.exe $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S D:\c_cpp\wut-c\main.c -o CMakeFiles\System_vagetable_sale.dir\main.c.s
 
 CMakeFiles/System_vagetable_sale.dir/tool.c.obj: CMakeFiles/System_vagetable_sale.dir/flags.make
+CMakeFiles/System_vagetable_sale.dir/tool.c.obj: CMakeFiles/System_vagetable_sale.dir/includes_C.rsp
 CMakeFiles/System_vagetable_sale.dir/tool.c.obj: D:/c_cpp/wut-c/tool.c
 CMakeFiles/System_vagetable_sale.dir/tool.c.obj: CMakeFiles/System_vagetable_sale.dir/compiler_depend.ts
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=D:\c_cpp\wut-c\cmake-build-debug\CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building C object CMakeFiles/System_vagetable_sale.dir/tool.c.obj"
@@ -97,6 +99,7 @@ CMakeFiles/System_vagetable_sale.dir/tool.c.s: cmake_force
 	D:\MSYS2\mingw64\bin\cc.exe $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S D:\c_cpp\wut-c\tool.c -o CMakeFiles\System_vagetable_sale.dir\tool.c.s
 
 CMakeFiles/System_vagetable_sale.dir/product.c.obj: CMakeFiles/System_vagetable_sale.dir/flags.make
+CMakeFiles/System_vagetable_sale.dir/product.c.obj: CMakeFiles/System_vagetable_sale.dir/includes_C.rsp
 CMakeFiles/System_vagetable_sale.dir/product.c.obj: D:/c_cpp/wut-c/product.c
 CMakeFiles/System_vagetable_sale.dir/product.c.obj: CMakeFiles/System_vagetable_sale.dir/compiler_depend.ts
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=D:\c_cpp\wut-c\cmake-build-debug\CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Building C object CMakeFiles/System_vagetable_sale.dir/product.c.obj"
@@ -111,6 +114,7 @@ CMakeFiles/System_vagetable_sale.dir/product.c.s: cmake_force
 	D:\MSYS2\mingw64\bin\cc.exe $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S D:\c_cpp\wut-c\product.c -o CMakeFiles\System_vagetable_sale.dir\product.c.s
 
 CMakeFiles/System_vagetable_sale.dir/user.c.obj: CMakeFiles/System_vagetable_sale.dir/flags.make
+CMakeFiles/System_vagetable_sale.dir/user.c.obj: CMakeFiles/System_vagetable_sale.dir/includes_C.rsp
 CMakeFiles/System_vagetable_sale.dir/user.c.obj: D:/c_cpp/wut-c/user.c
 CMakeFiles/System_vagetable_sale.dir/user.c.obj: CMakeFiles/System_vagetable_sale.dir/compiler_depend.ts
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=D:\c_cpp\wut-c\cmake-build-debug\CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Building C object CMakeFiles/System_vagetable_sale.dir/user.c.obj"
@@ -124,12 +128,28 @@ CMakeFiles/System_vagetable_sale.dir/user.c.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling C source to assembly CMakeFiles/System_vagetable_sale.dir/user.c.s"
 	D:\MSYS2\mingw64\bin\cc.exe $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S D:\c_cpp\wut-c\user.c -o CMakeFiles\System_vagetable_sale.dir\user.c.s
 
+CMakeFiles/System_vagetable_sale.dir/db.c.obj: CMakeFiles/System_vagetable_sale.dir/flags.make
+CMakeFiles/System_vagetable_sale.dir/db.c.obj: CMakeFiles/System_vagetable_sale.dir/includes_C.rsp
+CMakeFiles/System_vagetable_sale.dir/db.c.obj: D:/c_cpp/wut-c/db.c
+CMakeFiles/System_vagetable_sale.dir/db.c.obj: CMakeFiles/System_vagetable_sale.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=D:\c_cpp\wut-c\cmake-build-debug\CMakeFiles --progress-num=$(CMAKE_PROGRESS_5) "Building C object CMakeFiles/System_vagetable_sale.dir/db.c.obj"
+	D:\MSYS2\mingw64\bin\cc.exe $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT CMakeFiles/System_vagetable_sale.dir/db.c.obj -MF CMakeFiles\System_vagetable_sale.dir\db.c.obj.d -o CMakeFiles\System_vagetable_sale.dir\db.c.obj -c D:\c_cpp\wut-c\db.c
+
+CMakeFiles/System_vagetable_sale.dir/db.c.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing C source to CMakeFiles/System_vagetable_sale.dir/db.c.i"
+	D:\MSYS2\mingw64\bin\cc.exe $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E D:\c_cpp\wut-c\db.c > CMakeFiles\System_vagetable_sale.dir\db.c.i
+
+CMakeFiles/System_vagetable_sale.dir/db.c.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling C source to assembly CMakeFiles/System_vagetable_sale.dir/db.c.s"
+	D:\MSYS2\mingw64\bin\cc.exe $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S D:\c_cpp\wut-c\db.c -o CMakeFiles\System_vagetable_sale.dir\db.c.s
+
 # Object files for target System_vagetable_sale
 System_vagetable_sale_OBJECTS = \
 "CMakeFiles/System_vagetable_sale.dir/main.c.obj" \
 "CMakeFiles/System_vagetable_sale.dir/tool.c.obj" \
 "CMakeFiles/System_vagetable_sale.dir/product.c.obj" \
-"CMakeFiles/System_vagetable_sale.dir/user.c.obj"
+"CMakeFiles/System_vagetable_sale.dir/user.c.obj" \
+"CMakeFiles/System_vagetable_sale.dir/db.c.obj"
 
 # External object files for target System_vagetable_sale
 System_vagetable_sale_EXTERNAL_OBJECTS =
@@ -138,11 +158,12 @@ System_vagetable_sale.exe: CMakeFiles/System_vagetable_sale.dir/main.c.obj
 System_vagetable_sale.exe: CMakeFiles/System_vagetable_sale.dir/tool.c.obj
 System_vagetable_sale.exe: CMakeFiles/System_vagetable_sale.dir/product.c.obj
 System_vagetable_sale.exe: CMakeFiles/System_vagetable_sale.dir/user.c.obj
+System_vagetable_sale.exe: CMakeFiles/System_vagetable_sale.dir/db.c.obj
 System_vagetable_sale.exe: CMakeFiles/System_vagetable_sale.dir/build.make
 System_vagetable_sale.exe: CMakeFiles/System_vagetable_sale.dir/linkLibs.rsp
 System_vagetable_sale.exe: CMakeFiles/System_vagetable_sale.dir/objects1.rsp
 System_vagetable_sale.exe: CMakeFiles/System_vagetable_sale.dir/link.txt
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --bold --progress-dir=D:\c_cpp\wut-c\cmake-build-debug\CMakeFiles --progress-num=$(CMAKE_PROGRESS_5) "Linking C executable System_vagetable_sale.exe"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --bold --progress-dir=D:\c_cpp\wut-c\cmake-build-debug\CMakeFiles --progress-num=$(CMAKE_PROGRESS_6) "Linking C executable System_vagetable_sale.exe"
 	$(CMAKE_COMMAND) -E cmake_link_script CMakeFiles\System_vagetable_sale.dir\link.txt --verbose=$(VERBOSE)
 
 # Rule to build all files generated by this target.
