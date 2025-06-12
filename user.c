@@ -17,6 +17,34 @@ void add_admin_if_empty() {
     }
 }
 
+// 检查用户是否已登录
+int is_user_logged(int user_id) {
+    FILE *fp = fopen(LOGGED_USERS_FILE, "r");
+    if (!fp) return 0; // 文件不存在则认为未登录
+
+    int logged_id;
+    while (fscanf(fp, "%d", &logged_id) != EOF) {
+        if (logged_id == user_id) {
+            fclose(fp);
+            return 1; // 用户已登录
+        }
+    }
+    fclose(fp);
+    return 0; // 用户未登录
+}
+
+// 保存已登录用户
+void save_logged_users() {
+    FILE *fp = fopen(LOGGED_USERS_FILE, "w");
+    if (!fp) return;
+
+    // 当前登录用户
+    if (currentUser.id != 0) {
+        fprintf(fp, "%d\n", currentUser.id);
+    }
+    fclose(fp);
+}
+
 // 用户注册
 void register_user() {
     if (userCount >= MAX_USERS) {
@@ -63,14 +91,37 @@ int login() {
     for (int i = 0; i < userCount; i++) {
         if (strcmp(users[i].username, username) == 0 &&
             strcmp(users[i].password, password) == 0) {
+
+            // 检查用户是否已在其他终端登录
+            if (is_user_logged(users[i].id)) {
+                printf("该用户已在其他终端登录，请勿重复登录!\n");
+                return 0;
+            }
+
             currentUser = users[i];
             printf("登录成功! %s\n",
                    currentUser.role == ROLE_ADMIN ? "[管理员]" : "");
+
+            // 保存登录状态
+            save_logged_users();
             return 1;
         }
     }
     printf("用户名或密码错误!\n");
     return 0;
+}
+
+// 用户登出
+void logout() {
+    if (currentUser.id != 0) {
+        printf("%s 已登出\n", currentUser.username);
+
+        // 清除登录状态
+        FILE *fp = fopen(LOGGED_USERS_FILE, "w");
+        if (fp) fclose(fp);
+
+        currentUser.id = 0;
+    }
 }
 
 // 修改密码
@@ -123,13 +174,14 @@ void list_users() {
         return;
     }
 
-    printf("\n%-6s %-20s %-10s\n", "ID", "用户名", "角色");
-    printf("==================================\n");
+    printf("\n%-6s %-20s %-10s %-8s\n", "ID", "用户名", "角色", "状态");
+    printf("===========================================\n");
     for (int i = 0; i < userCount; i++) {
-        printf("%-6d %-20s %s\n",
+        printf("%-6d %-20s %-10s %s\n",
                users[i].id,
                users[i].username,
-               users[i].role == ROLE_ADMIN ? "管理员" : "普通用户");
+               users[i].role == ROLE_ADMIN ? "管理员" : "普通用户",
+               is_user_logged(users[i].id) ? "在线" : "离线");
     }
 }
 

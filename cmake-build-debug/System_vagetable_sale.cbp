@@ -80,9 +80,6 @@
 		<Unit filename="D:/c_cpp/wut-c/main.c">
 			<Option target="System_vagetable_sale"/>
 		</Unit>
-		<Unit filename="D:/c_cpp/wut-c/model.h">
-			<Option target="System_vagetable_sale"/>
-		</Unit>
 		<Unit filename="D:/c_cpp/wut-c/product.c">
 			<Option target="System_vagetable_sale"/>
 		</Unit>

@@ -158,7 +158,7 @@ void modify_product() {
 // 搜索商品
 void search_product() {
     if (currentUser.id == 0) {
-        printf("请先登录!\n");
+        printf ("请先登录!\n");
         return;
     }
 

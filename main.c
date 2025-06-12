@@ -13,6 +13,7 @@ void admin_menu() {
         printf("3. 添加用户\n");
         printf("4. 删除用户\n");
         printf("5. 修改密码\n");
+        printf("6. 登出\n");  // 新增登出选项
         printf("0. 返回主菜单\n");
         printf("====================\n选择操作: ");
         fflush(stdout);
@@ -24,6 +25,7 @@ void admin_menu() {
             case 3: register_user(); break;
             case 4: delete_user(); break;
             case 5: change_password(); break;
+            case 6: logout(); return; // 登出并返回
             case 0: return;
             default: printf("无效选择!\n");
         }
@@ -41,6 +43,7 @@ void user_menu() {
         printf("4. 修改商品\n");
         printf("5. 删除商品\n");
         printf("6. 修改密码\n");
+        printf("7. 登出\n");  // 新增登出选项
         printf("0. 返回主菜单\n");
         printf("=======================\n选择操作: ");
         fflush(stdout);
@@ -53,6 +56,7 @@ void user_menu() {
             case 4: modify_product(); break;
             case 5: delete_product(); break;
             case 6: change_password(); break;
+            case 7: logout(); return; // 登出并返回
             case 0: return;
             default: printf("无效选择!\n");
         }
@@ -63,6 +67,11 @@ int main() {
     printf("正在加载数据...\n");
     load_users();
     load_products();
+
+    // 启动时清除可能存在的登录状态
+    FILE *fp = fopen(LOGGED_USERS_FILE, "w");
+    if (fp) fclose(fp);
+
     printf("数据加载完成!\n");
 
     int main_choice;
@@ -83,7 +92,9 @@ int main() {
         scanf("%d", &main_choice);
 
         switch (main_choice) {
-            case 1: register_user(); break;
+            case 1:
+                register_user();
+                break;
             case 2:
                 if (login()) {
                     if (currentUser.role == ROLE_ADMIN) {
@@ -91,13 +102,13 @@ int main() {
                     } else {
                         user_menu();
                     }
-                    currentUser.id = 0; // 退出登录
                 }
                 break;
             case 3:
                 save_users();
                 save_products();
-                printf("感谢使用! 数据已保存至 users.txt 和 products.txt\n");
+                logout();
+                printf("感谢使用! 数据已保存\n");
                 exit(0);
             default: printf("无效选择!\n");
         }

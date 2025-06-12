@@ -17,6 +17,7 @@ extern User currentUser;
 
 void register_user();
 int login();
+void logout();
 void change_password();
 void list_users();
 void delete_user();
