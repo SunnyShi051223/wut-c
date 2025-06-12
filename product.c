@@ -47,9 +47,7 @@ void list_products() {
         return;
     }
 
-    if (!db_list_products()) {
-        printf("获取商品列表失败\n");
-    }
+    db_list_products(currentUser.id, (currentUser.role == ROLE_ADMIN));
 }
 
 // 修改商品
@@ -64,7 +62,7 @@ void modify_product() {
     fflush(stdout);
     scanf("%d", &id);
 
-    Product product = db_get_product(id);
+    Product product = db_get_product(id, currentUser.id, (currentUser.role == ROLE_ADMIN));
     if (product.id == 0) {
         printf("未找到该商品!\n");
         return;
@@ -111,7 +109,7 @@ void modify_product() {
         new_stock = product.stock;
     }
 
-    if (db_update_product(id, new_name, new_price, new_stock)) {
+    if (db_update_product(id, new_name, new_price, new_stock, currentUser.id, (currentUser.role == ROLE_ADMIN))) {
         printf("商品信息修改成功!\n");
     } else {
         printf("商品信息修改失败!\n");
@@ -130,7 +128,7 @@ void search_product() {
     fflush(stdout);
     scanf("%49s", keyword);
 
-    db_search_products(keyword, currentUser.id);
+    db_search_products(keyword, currentUser.id, (currentUser.role == ROLE_ADMIN));
 }
 
 // 删除商品
@@ -145,7 +143,7 @@ void delete_product() {
     fflush(stdout);
     scanf("%d", &id);
 
-    Product product = db_get_product(id);
+    Product product = db_get_product(id, currentUser.id, (currentUser.role == ROLE_ADMIN));
     if (product.id == 0) {
         printf("未找到该商品!\n");
         return;
@@ -156,7 +154,7 @@ void delete_product() {
         return;
     }
 
-    if (db_delete_product(id)) {
+    if (db_delete_product(id, currentUser.id, (currentUser.role == ROLE_ADMIN))) {
         printf("商品删除成功!\n");
     } else {
         printf("商品删除失败!\n");

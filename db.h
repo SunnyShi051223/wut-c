@@ -44,10 +44,10 @@ int db_set_user_logged_out(int user_id);
 
 // 商品管理
 int db_add_product(const char *name, float price, int stock, int user_id);
-Product db_get_product(int product_id);
-int db_update_product(int product_id, const char *name, float price, int stock);
-int db_delete_product(int product_id);
-int db_list_products();
-int db_search_products(const char *keyword, int user_id);
+Product db_get_product(int product_id,int user_id,int is_admin);
+int db_update_product(int product_id, const char *name, float price, int stock, int user_id, int is_admin);
+int db_delete_product(int product_id, int user_id, int is_admin);
+int db_list_products(int user_id,int is_admin);
+int db_search_products(const char *keyword, int user_id, int is_admin);
 
 #endif

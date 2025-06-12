@@ -206,7 +206,7 @@ int db_add_product(const char *name, float price, int stock, int user_id) {
     return mysql_insert_id(conn);
 }
 
-Product db_get_product(int product_id) {
+Product db_get_product(int product_id, int user_id, int is_admin) {
     Product product = {0};
     char query[100];
     sprintf(query, "SELECT * FROM products WHERE id = %d", product_id);
@@ -231,10 +231,23 @@ Product db_get_product(int product_id) {
     }
 
     mysql_free_result(result);
+
+    // 检查权限：管理员或商品所有者
+    if (!is_admin && product.user_id != user_id) {
+        product.id = 0; // 表示无权访问
+    }
+
     return product;
 }
 
-int db_update_product(int product_id, const char *name, float price, int stock) {
+int db_update_product(int product_id, const char *name, float price, int stock, int user_id, int is_admin) {
+    // 先检查商品所属关系
+    Product product = db_get_product(product_id, user_id, is_admin);
+    if (product.id == 0) {
+        printf("您无权修改此商品\n");
+        return 0;
+    }
+
     char query[256];
     sprintf(query, "UPDATE products SET name = '%s', price = %.2f, stock = %d WHERE id = %d",
             name, price, stock, product_id);
@@ -245,8 +258,14 @@ int db_update_product(int product_id, const char *name, float price, int stock) 
     }
     return 1;
 }
+int db_delete_product(int product_id, int user_id, int is_admin) {
+    // 先检查商品所属关系
+    Product product = db_get_product(product_id, user_id, is_admin);
+    if (product.id == 0) {
+        printf("您无权删除此商品\n");
+        return 0;
+    }
 
-int db_delete_product(int product_id) {
     char query[100];
     sprintf(query, "DELETE FROM products WHERE id = %d", product_id);
 
@@ -257,8 +276,13 @@ int db_delete_product(int product_id) {
     return 1;
 }
 
-int db_list_products() {
-    char query[] = "SELECT p.*, u.username FROM products p JOIN users u ON p.user_id = u.id";
+int db_list_products(int user_id, int is_admin) {
+    char query[256];
+    if (is_admin) {
+        strcpy(query, "SELECT p.*, u.username FROM products p JOIN users u ON p.user_id = u.id");
+    } else {
+        sprintf(query, "SELECT p.*, u.username FROM products p JOIN users u ON p.user_id = u.id WHERE p.user_id = %d", user_id);
+    }
 
     if (mysql_query(conn, query)) {
         fprintf(stderr, "List products failed: %s\n", mysql_error(conn));
@@ -267,6 +291,24 @@ int db_list_products() {
 
     MYSQL_RES *result = mysql_store_result(conn);
     if (result == NULL) {
+        if (is_admin) {
+            printf("系统暂无商品信息\n");
+        } else {
+            printf("您尚未添加任何商品\n");
+        }
+        return 0;
+    }
+
+    int num_fields = mysql_num_fields(result);
+    int num_rows = mysql_num_rows(result);
+
+    if (num_rows == 0) {
+        if (is_admin) {
+            printf("系统暂无商品信息\n");
+        } else {
+            printf("您尚未添加任何商品\n");
+        }
+        mysql_free_result(result);
         return 0;
     }
 
@@ -281,11 +323,14 @@ int db_list_products() {
     mysql_free_result(result);
     return 1;
 }
-
-int db_search_products(const char *keyword, int user_id) {
+int db_search_products(const char *keyword, int user_id, int is_admin) {
     char query[256];
-    sprintf(query, "SELECT * FROM products WHERE user_id = %d AND name LIKE '%%%s%%'",
-            user_id, keyword);
+    if (is_admin) {
+        sprintf(query, "SELECT p.*, u.username FROM products p JOIN users u ON p.user_id = u.id WHERE p.name LIKE '%%%s%%'", keyword);
+    } else {
+        sprintf(query, "SELECT p.*, u.username FROM products p JOIN users u ON p.user_id = u.id WHERE p.user_id = %d AND p.name LIKE '%%%s%%'",
+                user_id, keyword);
+    }
 
     if (mysql_query(conn, query)) {
         fprintf(stderr, "Search products failed: %s\n", mysql_error(conn));
@@ -298,18 +343,22 @@ int db_search_products(const char *keyword, int user_id) {
         return 0;
     }
 
-    printf("\n=== 搜索结果 ===\n");
-    int count = mysql_num_rows(result);
-    if (count == 0) {
+    int num_rows = mysql_num_rows(result);
+    if (num_rows == 0) {
         printf("未找到匹配商品\n");
-    } else {
-        MYSQL_ROW row;
-        while ((row = mysql_fetch_row(result))) {
-            printf("ID:%-5s 名称:%-15s 价格:%-8s 库存:%-6s\n",
-                   row[0], row[1], row[2], row[3]);
-        }
+        mysql_free_result(result);
+        return 0;
+    }
+
+    printf("\n=== 搜索结果 ===\n");
+    printf("%-5s %-20s %-8s %-6s %-20s\n", "ID", "名称", "价格", "库存", "所有者");
+    printf("==========================================================\n");
+
+    MYSQL_ROW row;
+    while ((row = mysql_fetch_row(result))) {
+        printf("%-5s %-20s %-8s %-6s %-20s\n", row[0], row[1], row[2], row[3], row[5]);
     }
 
     mysql_free_result(result);
-    return count;
+    return num_rows;
 }
