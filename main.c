@@ -44,7 +44,9 @@ void user_menu() {
         printf("4. 修改商品\n");
         printf("5. 删除商品\n");
         printf("6. 修改密码\n");
-        printf("7. 登出\n");
+        printf("7. 销售商品\n");          // 新增选项
+        printf("8. 统计销售金额\n");        // 新增选项
+        printf("9. 登出\n");
         printf("0. 返回主菜单\n");
         printf("=======================\n选择操作: ");
         fflush(stdout);
@@ -57,7 +59,9 @@ void user_menu() {
             case 4: modify_product(); break;
             case 5: delete_product(); break;
             case 6: change_password(); break;
-            case 7: logout(); return;
+            case 7: sell_product(); break;     // 调用销售功能
+            case 8: calculate_sales(); break;   // 调用统计功能
+            case 9: logout(); return;
             case 0: return;
             default: printf("无效选择!\n");
         }

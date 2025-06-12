@@ -335,3 +335,90 @@ int db_search_products(const char *keyword, int user_id, int is_admin) {
     mysql_free_result(result);
     return num_rows;
 }
+
+
+
+// 记录销售
+int db_record_sale(int product_id, int quantity, float unit_price,
+                   float total_amount, int user_id) {
+    char query[512];
+    sprintf(query,
+            "INSERT INTO sales (product_id, quantity, unit_price, total_amount, user_id, sale_time) "
+            "VALUES (%d, %d, %.2f, %.2f, %d, NOW())",
+            product_id, quantity, unit_price, total_amount, user_id);
+
+    if (mysql_query(conn, query)) {
+        fprintf(stderr, "Record sale failed: %s\n", mysql_error(conn));
+        return 0;
+    }
+    return 1;
+}
+
+// 统计销售金额
+float db_calculate_sales(int user_id, int is_admin,
+                         const char *start_date, const char *end_date) {
+    char query[512];
+    float total = 0.0;
+
+    // 构建基础查询
+    if (is_admin) {
+        strcpy(query, "SELECT SUM(total_amount) FROM sales");
+    } else {
+        sprintf(query, "SELECT SUM(total_amount) FROM sales WHERE user_id = %d", user_id);
+    }
+
+    // 标记是否有其他条件
+    int has_conditions = 0;
+
+    // 处理时间条件
+    char time_condition[256] = {0};
+    if (strlen(start_date) > 0 || strlen(end_date) > 0) {
+        if (strlen(start_date) > 0) {
+            sprintf(time_condition, "sale_time >= '%s'", start_date);
+            has_conditions = 1;
+        }
+
+        if (strlen(end_date) > 0) {
+            if (strlen(time_condition) > 0) {
+                strcat(time_condition, " AND ");
+            }
+            sprintf(time_condition + strlen(time_condition), "sale_time <= '%s 23:59:59'", end_date);
+            has_conditions = 1;
+        } else if (strlen(start_date) > 0) {
+            // 如果有开始日期但没有结束日期，默认结束日期为今天
+            strcat(time_condition, " AND sale_time <= NOW()");
+        }
+    }
+
+    // 添加时间条件到查询
+    if (has_conditions) {
+        // 根据是否已有条件决定使用WHERE还是AND
+        if (is_admin) {
+            strcat(query, " WHERE ");
+        } else {
+            strcat(query, " AND ");
+        }
+        strcat(query, time_condition);
+    }
+
+    if (mysql_query(conn, query)) {
+        fprintf(stderr, "Calculate sales failed: %s\n", mysql_error(conn));
+        return -1;
+    }
+
+    MYSQL_RES *result = mysql_store_result(conn);
+    if (result) {
+        MYSQL_ROW row = mysql_fetch_row(result);
+        if (row && row[0]) {
+            total = atof(row[0]);
+        } else {
+            total = 0.0; // 没有销售记录
+        }
+        mysql_free_result(result);
+    } else {
+        // 没有结果集（可能是没有符合条件的记录）
+        total = 0.0;
+    }
+
+    return total;
+}

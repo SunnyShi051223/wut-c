@@ -48,5 +48,6 @@ int db_update_product(int product_id, const char *name, float price, int stock, 
 int db_delete_product(int product_id, int user_id, int is_admin);
 int db_list_products(int user_id,int is_admin);
 int db_search_products(const char *keyword, int user_id, int is_admin);
-
+int db_record_sale(int product_id, int quantity, float unit_price,float total_amount, int user_id);
+float db_calculate_sales(int user_id, int is_admin,const char *start_date, const char *end_date);
 #endif
