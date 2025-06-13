@@ -7,8 +7,6 @@
 #define DB_PASSWORD "shisannian1223"
 #define DB_NAME "vagetable"
 
-// 系统配置常量
-#define MAX_NAME_LEN 50
 
 // 用户角色枚举
 typedef enum {
